@@ -8,5 +8,5 @@
 #     fetchThirdParty: false
 - insert:
     - id: circuit2vst
-      name: '@local/dsh-circuit2vst'
+      name: 'dsh-circuit2vst'
       config: {}
