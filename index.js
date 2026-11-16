@@ -30,13 +30,14 @@ export function apply(ctx, config) {
   ctx.effect(() => registerTools(ctx, service))
   ctx.effect(() => () => service.dispose())
 
-  const webServer = typeof ctx.get === 'function' ? ctx.get('webServer') : undefined
-  if (webServer === undefined) {
-    // A composition without the browser carrier still keeps the tool usable.
-    service.notice('webServer 未启用：面板拿不到数据，工具仍可用。')
-  } else {
-    ctx.effect(() => registerRoutes(ctx, service, webServer))
-  }
+  // The browser carrier is optional (a TUI composition has no webServer), so the
+  // plugin must not declare it in `inject`. But looking it up optimistically at
+  // apply time races the carrier's registration: when another bundle happened to
+  // register later, the route silently disappeared and the panel hit the static
+  // handler (404 on GET / 405 on POST). Fork on the service instead.
+  ctx.inject(['webServer'], (child) => {
+    child.effect(() => registerRoutes(child, service, child.webServer))
+  })
 
   const logger = ctx.logger
   if (typeof logger?.info === 'function') {

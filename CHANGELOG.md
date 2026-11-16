@@ -1,5 +1,11 @@
 # 更新日志
 
+## 0.1.2 — 2026-11-16
+
+- 修复面板路由偶发未注册：`apply` 里用 `ctx.get('webServer')` 乐观查找，若浏览器载体稍后才注册，
+  路由就被静默跳过，面板请求落到静态处理器（GET 404 / POST 405）。改为 `ctx.inject(['webServer'], …)`
+  的 fork，路由随服务就绪自动挂载，工具在没有浏览器载体的组合里仍然可用。
+
 ## 0.1.1 — 2026-11-16
 
 - 包名由 `@local/dsh-circuit2vst` 改为 **`dsh-circuit2vst`**（github 仓库同名），客户端 bundle id 同步重建；
