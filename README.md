@@ -4,7 +4,7 @@
 
 # dsh-circuit2vst
 
-<p align="center"><b>把自绘电路变成多平台插件（VST3 / AU / CLAP）的 DeepSeek Harness 插件。</b></p>
+<p align="left"><b>把自绘电路变成多平台插件（VST3 / AU / CLAP）的 DeepSeek Harness 插件。</b></p>
 
 > 一句话：在 DSH 里画电路、画面板、说一句"打包"，拿到能直接装进 DAW 的安装包。
 
