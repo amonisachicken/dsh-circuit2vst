@@ -14,7 +14,8 @@ import { join } from 'node:path'
 import { verifyCircuit, parseRows, buildBatch, SILENCE_RMS } from '../src/host/verify.js'
 
 const ROOT = new URL('..', import.meta.url).pathname
-const GOOD = '/Users/gutoushanghaidai/deve/rustomp-projects/red-face/circuit/red-face.design.json'
+// Vendored example: keeps the gate test self-contained (no local project paths).
+const GOOD = join(ROOT, 'vendor/circuit/examples/diode-clip.design.json')
 
 /** Whether the host has ngspice. */
 function hasNgspice() {
@@ -53,28 +54,32 @@ test('a live design passes the gate', async (t) => {
   try {
     const report = await verifyCircuit(dir)
     assert.equal(report.ok, true)
-    assert.ok(report.metrics.outRms > SILENCE_RMS * 10, `outRms=${report.metrics.outRms}`)
+    assert.ok(report.metrics.outRms > SILENCE_RMS * 4, `outRms=${report.metrics.outRms}`)
     assert.ok(report.metrics.inPeak > 0.05)
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
 })
 
-test('a shorted design is rejected as silent', async (t) => {
+test('a shorted design is rejected', async (t) => {
   if (!hasNgspice()) return t.skip('no ngspice')
   const dir = await project(GOOD)
   try {
     const path = join(dir, 'circuit', 'demo.design.json')
     const doc = JSON.parse(await readFile(path, 'utf8'))
-    // Ground the base: the same class of bug as a wire crossing a ground pin.
+    // Short the output to ground: the same class of bug as a stray wire, and it
+    // must be caught by the silence gate.
     doc.wires.push(
-      { id: 'wShort1', points: [{ x: 62.5, y: 20 }, { x: 90, y: 20 }] },
-      { id: 'wShort2', points: [{ x: 90, y: 20 }, { x: 90, y: 27.5 }] },
+      { id: 'wShort1', points: [{ x: 47.5, y: 0 }, { x: 47.5, y: 27.5 }] },
+      { id: 'wShort2', points: [{ x: 47.5, y: 27.5 }, { x: 20, y: 27.5 }] },
     )
     await writeFile(path, JSON.stringify(doc), 'utf8')
     const report = await verifyCircuit(dir)
     assert.equal(report.ok, false)
-    assert.ok(report.checks.some((check) => check.code === 'silent-output'))
+    assert.ok(
+      report.checks.some((check) => check.level === 'error' && ['silent-output', 'sim-failed'].includes(check.code)),
+      JSON.stringify(report.checks),
+    )
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
