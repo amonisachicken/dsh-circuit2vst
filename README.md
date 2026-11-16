@@ -1,6 +1,10 @@
+<p align="center">
+  <img src="docs/logo.png" width="148" alt="Circuit2VST">
+</p>
+
 # dsh-circuit2vst
 
-**把自绘电路变成多平台插件（VST3 / AU / CLAP）的 DeepSeek Harness 插件。**
+<p align="center"><b>把自绘电路变成多平台插件（VST3 / AU / CLAP）的 DeepSeek Harness 插件。</b></p>
 
 > 一句话：在 DSH 里画电路、画面板、说一句"打包"，拿到能直接装进 DAW 的安装包。
 
@@ -107,6 +111,10 @@ circuit2vst pack my-fuzz                    # 产出安装包（ARTIFACT: …）
 - 实时网表卡片：lint（悬空、未知型号、端口、地）与**隐式连接审计**（见下）；
 - 仿真：瞬态/AC、FFT 频谱、THD；**IN 兼作波形发生器**（幅值/频率写回 IN 元件），**双击 OUT / 测试点打开示波器**；
 - 存档/另存、导出网表（`circuit/netlist/`）、导出 PNG。
+
+#### 仿真与示波器
+
+![双击 OUT 打开示波器：v(out) 与 v(in) 对照，IN 兼作波形发生器](docs/scope.png)
 
 ## 构建前对拍（内置规范）
 

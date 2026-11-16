@@ -444,7 +444,7 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
         const loaded = load(design.text)
         loaded.params = parsedParams
         setDoc(loaded)
-        showToast(`${t('designer.exists')}：${project.dir}/design/panel.box.json`)
+        showToast(`${t('designer.exists')}：design/panel.box.json`)
       } else {
         const created = newDoc({ name: newName.trim() || (project.name ?? project.slug), preset: newPreset, params: parsedParams })
         setDoc(created)

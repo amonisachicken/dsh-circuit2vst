@@ -1,5 +1,5 @@
 {
-  "name": "dsh-circuit2vst",
+  "name": "@local/dsh-circuit2vst",
   "version": "0.1.0",
   "private": true,
   "type": "module",
