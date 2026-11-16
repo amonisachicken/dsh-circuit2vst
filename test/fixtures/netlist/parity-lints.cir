@@ -1,0 +1,7 @@
+* parity-lints —— 由 rustomp-circuit-designer 生成
+
+D1 n7 n8 1N9999
+Q1 n5 n4 n6
+R1 n1 n2 1k
+R1 n1 n2 2k
+.end

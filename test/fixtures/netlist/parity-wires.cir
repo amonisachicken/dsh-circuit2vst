@@ -1,0 +1,6 @@
+* parity-wires —— 由 rustomp-circuit-designer 生成
+* @rustomp in=IN out=OUT
+
+R1 IN IN 1k
+R2 OUT OUT 2k
+.end

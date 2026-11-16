@@ -1,0 +1,62 @@
+{
+  "lints": [],
+  "ports": {
+    "in": "IN",
+    "out": "OUT"
+  },
+  "dangling": [],
+  "nets": [
+    {
+      "name": "IN",
+      "pins": [
+        "C1.1",
+        "IN1.IN"
+      ]
+    },
+    {
+      "name": "n1",
+      "pins": [
+        "Q1.B",
+        "R3.2",
+        "C1.2"
+      ]
+    },
+    {
+      "name": "VCC",
+      "pins": [
+        "R1.1",
+        "R3.1",
+        "VCC1.VCC"
+      ]
+    },
+    {
+      "name": "n2",
+      "pins": [
+        "Q1.C",
+        "R1.2",
+        "C2.1"
+      ]
+    },
+    {
+      "name": "n3",
+      "pins": [
+        "Q1.E",
+        "R2.1"
+      ]
+    },
+    {
+      "name": "0",
+      "pins": [
+        "R2.2",
+        "GND1.GND"
+      ]
+    },
+    {
+      "name": "OUT",
+      "pins": [
+        "C2.2",
+        "OUT1.OUT"
+      ]
+    }
+  ]
+}

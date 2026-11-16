@@ -1,0 +1,12 @@
+# Circuit2VST：一个 Host 侧编排器 + 一块 Web 中央面板。
+#
+# 可在本行 config 里覆盖默认路径（不写则用 Host 代码里的默认值）：
+#   config:
+#     projectsDir: ~/deve/rustomp-projects
+#     depsDir: ~/deve/rustomp-projects/.deps
+#     allowNetwork: true
+#     fetchThirdParty: false
+- insert:
+    - id: circuit2vst
+      name: '@local/dsh-circuit2vst'
+      config: {}

@@ -1,0 +1,90 @@
+{
+  "lints": [
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "P2 的引脚 1 悬空（网络 n1 只连了自己）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "P2 的引脚 2 悬空（网络 n2 只连了自己）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "P2 的引脚 3 悬空（网络 n3 只连了自己）"
+    }
+  ],
+  "ports": {
+    "in": "IN",
+    "out": "OUT"
+  },
+  "dangling": [
+    {
+      "at": {
+        "x": 107.5,
+        "y": 60
+      },
+      "pin": "1",
+      "ref": "P2"
+    },
+    {
+      "at": {
+        "x": 125,
+        "y": 47.5
+      },
+      "pin": "2",
+      "ref": "P2"
+    },
+    {
+      "at": {
+        "x": 132.5,
+        "y": 60
+      },
+      "pin": "3",
+      "ref": "P2"
+    }
+  ],
+  "nets": [
+    {
+      "name": "IN",
+      "pins": [
+        "IN1.IN",
+        "P1.1"
+      ]
+    },
+    {
+      "name": "OUT",
+      "pins": [
+        "P1.2",
+        "OUT1.OUT"
+      ]
+    },
+    {
+      "name": "0",
+      "pins": [
+        "P1.3",
+        "GND1.GND"
+      ]
+    },
+    {
+      "name": "n1",
+      "pins": [
+        "P2.1"
+      ]
+    },
+    {
+      "name": "n2",
+      "pins": [
+        "P2.2"
+      ]
+    },
+    {
+      "name": "n3",
+      "pins": [
+        "P2.3"
+      ]
+    }
+  ]
+}

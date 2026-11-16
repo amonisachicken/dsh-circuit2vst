@@ -1,0 +1,12 @@
+* parity-pot —— 由 rustomp-circuit-designer 生成
+* @rustomp in=IN out=OUT
+* @rustomp param RP1A gain pot max=500k
+* @rustomp param RP1B gain pot max=500k invert
+* @rustomp param RP2A p2 pot max=500k
+* @rustomp param RP2B p2 pot max=500k invert
+
+RP1A IN OUT 250k
+RP1B OUT 0 250k
+RP2A n1 n2 250k
+RP2B n2 n3 250k
+.end

@@ -1,0 +1,10 @@
+* 共射前级（NPN） —— 由 rustomp-circuit-designer 生成
+* @rustomp in=IN out=OUT
+
+C1 IN n1 47n
+C2 n2 OUT 1u
+Q1 n2 n1 n3 BC549C
+R1 VCC n2 10k
+R2 n3 0 1k
+R3 VCC n1 470k
+.end

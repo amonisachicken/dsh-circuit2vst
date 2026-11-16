@@ -1,0 +1,187 @@
+{
+  "lints": [
+    {
+      "code": "dup-ref",
+      "level": "error",
+      "msg": "参考编号 R1 出现 2 次"
+    },
+    {
+      "code": "bad-wire",
+      "level": "warn",
+      "msg": "导线 w2 少于两个锚点，已忽略"
+    },
+    {
+      "code": "unknown-symbol",
+      "level": "error",
+      "msg": "X9：未知符号 not-a-symbol"
+    },
+    {
+      "code": "model-missing",
+      "level": "error",
+      "msg": "Q1：没选型号（BC549C/AC127 之一）"
+    },
+    {
+      "code": "model-not-allowed",
+      "level": "error",
+      "msg": "D1：型号 1N9999 不在该符号的闭集里（1N4148/1N34A/1N4007/1N5817）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "R1 的引脚 1 悬空（网络 n1 只连了自己）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "R1 的引脚 2 悬空（网络 n3 只连了自己）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "Q1 的引脚 B 悬空（网络 n4 只连了自己）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "Q1 的引脚 C 悬空（网络 n5 只连了自己）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "Q1 的引脚 E 悬空（网络 n6 只连了自己）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "D1 的引脚 A 悬空（网络 n7 只连了自己）"
+    },
+    {
+      "code": "dangling-pin",
+      "level": "warn",
+      "msg": "D1 的引脚 K 悬空（网络 n8 只连了自己）"
+    },
+    {
+      "code": "no-ground",
+      "level": "error",
+      "msg": "没有接地符号（网表里没有 0 节点）"
+    },
+    {
+      "code": "no-port",
+      "level": "warn",
+      "msg": "缺少 IN 或 OUT 端口符号 → 无法生成 Circuit"
+    }
+  ],
+  "ports": {
+    "in": null,
+    "out": null
+  },
+  "dangling": [
+    {
+      "at": {
+        "x": -12.5,
+        "y": 0
+      },
+      "pin": "1",
+      "ref": "R1"
+    },
+    {
+      "at": {
+        "x": 72.5,
+        "y": 0
+      },
+      "pin": "2",
+      "ref": "R1"
+    },
+    {
+      "at": {
+        "x": 167.5,
+        "y": 0
+      },
+      "pin": "B",
+      "ref": "Q1"
+    },
+    {
+      "at": {
+        "x": 182.5,
+        "y": -12.5
+      },
+      "pin": "C",
+      "ref": "Q1"
+    },
+    {
+      "at": {
+        "x": 182.5,
+        "y": 12.5
+      },
+      "pin": "E",
+      "ref": "Q1"
+    },
+    {
+      "at": {
+        "x": 227.5,
+        "y": 0
+      },
+      "pin": "A",
+      "ref": "D1"
+    },
+    {
+      "at": {
+        "x": 252.5,
+        "y": 0
+      },
+      "pin": "K",
+      "ref": "D1"
+    }
+  ],
+  "nets": [
+    {
+      "name": "n1",
+      "pins": [
+        "R1.1"
+      ]
+    },
+    {
+      "name": "n2",
+      "pins": [
+        "R1.2",
+        "R1.1"
+      ]
+    },
+    {
+      "name": "n3",
+      "pins": [
+        "R1.2"
+      ]
+    },
+    {
+      "name": "n4",
+      "pins": [
+        "Q1.B"
+      ]
+    },
+    {
+      "name": "n5",
+      "pins": [
+        "Q1.C"
+      ]
+    },
+    {
+      "name": "n6",
+      "pins": [
+        "Q1.E"
+      ]
+    },
+    {
+      "name": "n7",
+      "pins": [
+        "D1.A"
+      ]
+    },
+    {
+      "name": "n8",
+      "pins": [
+        "D1.K"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "name": "dsh-circuit2vst",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "把自绘电路变成多平台 VST3/AU/CLAP 插件：DSH 插件，内含 rustomp 电路/面板设计器、代码生成与平台打包的编排层。",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "src",
+    "locale/*.json",
+    "docs",
+    "icon.svg"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  },
+  "scripts": {
+    "build:client": "node scripts/build-client.mjs",
+    "gen:assets": "node scripts/gen-asset-text.mjs",
+    "test": "node --test test/units.mjs test/netlist-parity.mjs test/params.mjs test/gui.mjs test/verify.mjs",
+    "test:parity": "node test/export-parity.mjs",
+    "test:netlist": "node --test test/netlist-parity.mjs",
+    "goldens:netlist": "node test/netlist-parity.mjs --refresh",
+    "docs:parity": "node test/make-parity-docs.mjs"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "amonisachicken",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amonisachicken/dsh-circuit2vst.git"
+  },
+  "homepage": "https://github.com/amonisachicken/dsh-circuit2vst#readme",
+  "bugs": {
+    "url": "https://github.com/amonisachicken/dsh-circuit2vst/issues"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "rustomp",
+    "vst3",
+    "clap",
+    "audio-plugin",
+    "circuit-designer"
+  ]
+}

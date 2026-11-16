@@ -1,0 +1,6 @@
+* parity-source —— 由 rustomp-circuit-designer 生成
+* @rustomp in=IN out=OUT
+
+R1 IN OUT 47k
+V1 IN 0 DC 9
+.end

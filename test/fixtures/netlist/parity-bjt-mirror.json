@@ -1,0 +1,46 @@
+{
+  "lints": [],
+  "ports": {
+    "in": "IN",
+    "out": "OUT"
+  },
+  "dangling": [],
+  "nets": [
+    {
+      "name": "IN",
+      "pins": [
+        "IN1.IN",
+        "R1.1"
+      ]
+    },
+    {
+      "name": "0",
+      "pins": [
+        "Q1.E",
+        "GND1.GND"
+      ]
+    },
+    {
+      "name": "n1",
+      "pins": [
+        "R1.2",
+        "Q1.B"
+      ]
+    },
+    {
+      "name": "VCC",
+      "pins": [
+        "R2.1",
+        "VCC1.VCC"
+      ]
+    },
+    {
+      "name": "OUT",
+      "pins": [
+        "Q1.C",
+        "R2.2",
+        "OUT1.OUT"
+      ]
+    }
+  ]
+}

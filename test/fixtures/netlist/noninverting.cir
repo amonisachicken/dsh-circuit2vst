@@ -1,0 +1,7 @@
+* 同相放大（非反相） —— 由 rustomp-circuit-designer 生成
+* @rustomp in=IN out=OUT
+
+R1 n1 OUT 100k
+R2 n1 0 10k
+XU1 IN n1 VCC VEE OUT OP07A
+.end

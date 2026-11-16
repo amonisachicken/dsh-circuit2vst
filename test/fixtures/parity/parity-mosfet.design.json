@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "name": "parity-mosfet",
+  "parts": [
+    {
+      "id": "pIN1",
+      "ref": "IN1",
+      "symbol": "node-in",
+      "at": {
+        "x": 0,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pR1",
+      "ref": "R1",
+      "symbol": "resistor",
+      "at": {
+        "x": 60,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none",
+      "value": "1meg"
+    },
+    {
+      "id": "pM1",
+      "ref": "M1",
+      "symbol": "mosfet-n",
+      "at": {
+        "x": 120,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none",
+      "model": "2N7000"
+    },
+    {
+      "id": "pR2",
+      "ref": "R2",
+      "symbol": "resistor",
+      "at": {
+        "x": 180,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none",
+      "value": "2.2k"
+    },
+    {
+      "id": "pVCC1",
+      "ref": "VCC1",
+      "symbol": "vcc",
+      "at": {
+        "x": 240,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pGND1",
+      "ref": "GND1",
+      "symbol": "earth",
+      "at": {
+        "x": 120,
+        "y": 60
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pTP1",
+      "ref": "TP1",
+      "symbol": "test-point",
+      "at": {
+        "x": 300,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pNC1",
+      "ref": "NC1",
+      "symbol": "nc",
+      "at": {
+        "x": 300,
+        "y": 60
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pOUT1",
+      "ref": "OUT1",
+      "symbol": "node-out",
+      "at": {
+        "x": 360,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none"
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "points": [
+        {
+          "x": 12.5,
+          "y": 0
+        },
+        {
+          "x": 47.5,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "w2",
+      "points": [
+        {
+          "x": 72.5,
+          "y": 0
+        },
+        {
+          "x": 107.5,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "w3",
+      "points": [
+        {
+          "x": 125,
+          "y": -12.5
+        },
+        {
+          "x": 192.5,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "w4",
+      "points": [
+        {
+          "x": 167.5,
+          "y": 0
+        },
+        {
+          "x": 240,
+          "y": 12.5
+        }
+      ]
+    },
+    {
+      "id": "w5",
+      "points": [
+        {
+          "x": 125,
+          "y": 12.5
+        },
+        {
+          "x": 120,
+          "y": 47.5
+        }
+      ]
+    },
+    {
+      "id": "w6",
+      "points": [
+        {
+          "x": 125,
+          "y": -12.5
+        },
+        {
+          "x": 295,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "w7",
+      "points": [
+        {
+          "x": 295,
+          "y": 0
+        },
+        {
+          "x": 347.5,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "w8",
+      "points": [
+        {
+          "x": 347.5,
+          "y": 0
+        },
+        {
+          "x": 295,
+          "y": 60
+        }
+      ]
+    }
+  ],
+  "nextId": 18
+}

@@ -1,0 +1,32 @@
+{
+  "lints": [
+    {
+      "code": "no-ground",
+      "level": "error",
+      "msg": "没有接地符号（网表里没有 0 节点）"
+    }
+  ],
+  "ports": {
+    "in": "IN",
+    "out": "OUT"
+  },
+  "dangling": [],
+  "nets": [
+    {
+      "name": "IN",
+      "pins": [
+        "IN1.IN",
+        "R1.1",
+        "R1.2"
+      ]
+    },
+    {
+      "name": "OUT",
+      "pins": [
+        "R2.1",
+        "R2.2",
+        "OUT1.OUT"
+      ]
+    }
+  ]
+}

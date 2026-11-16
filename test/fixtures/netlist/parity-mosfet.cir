@@ -1,0 +1,7 @@
+* parity-mosfet —— 由 rustomp-circuit-designer 生成
+* @rustomp in=IN out=OUT
+
+M1 OUT n1 0 0 2N7000
+R1 IN n1 1meg
+R2 VCC OUT 2.2k
+.end

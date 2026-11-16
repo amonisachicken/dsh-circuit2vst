@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "name": "parity-source",
+  "parts": [
+    {
+      "id": "pV1",
+      "ref": "V1",
+      "symbol": "voltage-source",
+      "at": {
+        "x": 0,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none",
+      "value": "9"
+    },
+    {
+      "id": "pIN1",
+      "ref": "IN1",
+      "symbol": "node-in",
+      "at": {
+        "x": 60,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pR1",
+      "ref": "R1",
+      "symbol": "resistor",
+      "at": {
+        "x": 120,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none",
+      "value": "47k"
+    },
+    {
+      "id": "pGND1",
+      "ref": "GND1",
+      "symbol": "earth",
+      "at": {
+        "x": 0,
+        "y": 60
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pOUT1",
+      "ref": "OUT1",
+      "symbol": "node-out",
+      "at": {
+        "x": 180,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none"
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "points": [
+        {
+          "x": 0,
+          "y": -12.5
+        },
+        {
+          "x": 72.5,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "w2",
+      "points": [
+        {
+          "x": 0,
+          "y": 12.5
+        },
+        {
+          "x": 0,
+          "y": 47.5
+        }
+      ]
+    },
+    {
+      "id": "w3",
+      "points": [
+        {
+          "x": 72.5,
+          "y": 0
+        },
+        {
+          "x": 107.5,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "w4",
+      "points": [
+        {
+          "x": 132.5,
+          "y": 0
+        },
+        {
+          "x": 167.5,
+          "y": 0
+        }
+      ]
+    }
+  ],
+  "nextId": 10
+}

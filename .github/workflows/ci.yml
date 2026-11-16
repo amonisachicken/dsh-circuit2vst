@@ -1,0 +1,46 @@
+name: CI
+
+# 两层：
+#   fast   —— 不需要 ngspice：单元/网表对拍/参数/界面接线 + client.js 与源码一致
+#   oracle —— 需要 ngspice：构建前对拍的活体用例（缺 ngspice 会自动 skip，这里装真依赖）
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fast:
+    name: 快速层（无 ngspice）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 单元与对拍用例
+        run: npm test
+      - name: client.js 与源码一致
+        run: |
+          npm run build:client
+          git diff --exit-code client.js
+
+  oracle:
+    name: 对拍层（ngspice）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 安装 ngspice
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ngspice
+          ngspice --version | head -3
+      - name: 构建前对拍（含活体 ngspice 用例）
+        run: npm test

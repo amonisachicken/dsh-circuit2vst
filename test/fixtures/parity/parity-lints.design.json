@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "name": "parity-lints",
+  "parts": [
+    {
+      "id": "pR1",
+      "ref": "R1",
+      "symbol": "resistor",
+      "at": {
+        "x": 0,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none",
+      "value": "1k"
+    },
+    {
+      "id": "pR1",
+      "ref": "R1",
+      "symbol": "resistor",
+      "at": {
+        "x": 60,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none",
+      "value": "2k"
+    },
+    {
+      "id": "pX9",
+      "ref": "X9",
+      "symbol": "not-a-symbol",
+      "at": {
+        "x": 120,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pQ1",
+      "ref": "Q1",
+      "symbol": "npn",
+      "at": {
+        "x": 180,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none"
+    },
+    {
+      "id": "pD1",
+      "ref": "D1",
+      "symbol": "diode",
+      "at": {
+        "x": 240,
+        "y": 0
+      },
+      "rot": 0,
+      "mirror": "none",
+      "model": "1N9999"
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "points": [
+        {
+          "x": 12.5,
+          "y": 0
+        },
+        {
+          "x": 47.5,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "w2",
+      "points": [
+        {
+          "x": 72.5,
+          "y": 0
+        }
+      ]
+    }
+  ],
+  "nextId": 8
+}

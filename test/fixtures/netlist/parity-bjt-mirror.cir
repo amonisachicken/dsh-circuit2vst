@@ -1,0 +1,7 @@
+* parity-bjt-mirror —— 由 rustomp-circuit-designer 生成
+* @rustomp in=IN out=OUT
+
+Q1 OUT n1 0 BC549C
+R1 IN n1 4.7k
+R2 VCC OUT 10k
+.end
