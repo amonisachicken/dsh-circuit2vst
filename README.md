@@ -54,11 +54,21 @@ rustomp 负责"电路 → DSP → 插件外壳"，本插件负责"人怎么画�
 
 ```bash
 git clone https://github.com/amonisachicken/dsh-circuit2vst.git
+cd dsh-circuit2vst
+./install.sh                 # 装进默认的 web profile（link 到本仓库）
 ```
 
-然后用 DSH 的插件管理把它装进当前 profile（本地目录即可），启用后刷新页面，侧栏出现 **Circuit2VST**。
+`install.sh` 会把这个仓库写进 `$DSH_HOME/profiles/<profile>/package.json` 的依赖和
+`dsh.profile.bundles`，然后跑 `pnpm install`。可选参数：
 
-开发时也可以把仓库软链到 profile 的插件目录，改完 `npm run build:client` 再刷新页面即可热更新客户端包。
+| 参数 | 说明 |
+|---|---|
+| `--profile <name>` | 指定 profile（默认 `web`，例如 `dsh-tui`） |
+| `--copy` | 把仓库复制到 `$DSH_HOME/plugins/dsh-circuit2vst` 再链接（适合装完就挪走源码） |
+| `--dry-run` | 只打印计划，不改文件 |
+
+装完重启 DSH（或刷新页面），侧栏出现 **Circuit2VST**。开发时保持 `link` 模式即可：
+改完源码跑 `npm run build:client`，刷新页面就加载新客户端包。
 
 ## 快速开始
 

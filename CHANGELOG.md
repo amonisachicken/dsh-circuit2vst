@@ -14,6 +14,7 @@
 - **启用界面** `enableGui`：幂等接上 `[build] gui`、egui 依赖、`plugin/src/editor.rs` 与模块钩子。
 - **构建前对拍** `verify`：网表无 lint + ngspice 非静音（RMS ≥ 5 mV）+ 隐式连接审计；`pack` 默认强制。
 - **打包**：macOS（VST3/AU/CLAP + DMG）、Windows（VST3/CLAP + MSI）、Linux（VST3/CLAP + tar.gz）。
+- **安装脚本** `install.sh`：把仓库接进 DSH profile（依赖 + `dsh.profile.bundles` + `pnpm install`），支持 `--profile` / `--copy` / `--dry-run`。
 
 ### 修复
 
