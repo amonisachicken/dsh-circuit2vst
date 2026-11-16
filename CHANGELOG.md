@@ -1,5 +1,10 @@
 # 更新日志
 
+## 0.1.1 — 2026-11-16
+
+- 包名由 `@local/dsh-circuit2vst` 改为 **`dsh-circuit2vst`**（github 仓库同名），客户端 bundle id 同步重建；
+- `install.sh` 写入的 profile 依赖因此变为 `dsh-circuit2vst`（升级用户需重启 DSH 让宿主按新 bundle id 加载）。
+
 ## 0.1.0 — 2026-11-16
 
 首个公开版本：把 rustomp 的"电路 → DSP → 插件"流程搬进 DeepSeek Harness。
