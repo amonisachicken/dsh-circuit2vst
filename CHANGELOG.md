@@ -1,5 +1,15 @@
 # 更新日志
 
+## 0.1.5 — 2026-11-18
+
+- **修复面板 `读取失败：forbidden`（外部反馈）**：面板路由把 `webServer.register` 的第三个参数 `peer` 当鉴权依据，
+  但 npm 版 Harness（如 0.2.2-rc.1）只调用 `handler(req, res)`，`peer` 恒为 `undefined`，owner 校验因此拒绝所有人。
+  现在改为：有 `peer` 用 peer；没有则回退到 Harness `/api` 同款 `connection` 鉴权围栏
+  （`connection.requestRejection(req)`，旧版用 `connection.admit(req)`），两者都不存在时按"本地无鉴权面"放行。
+- 删除对不存在字段的依赖：`auth: 'required'` 在有该字段的宿主上仍生效，旧宿主会忽略（类型里没有），不再参与判断。
+- 新增 `test/routes-auth.mjs`（5 个用例）覆盖三种分支：peer 注入 / `requestRejection` / `admit`，以及无鉴权面的降级。
+- 反馈原文归档到 `docs/reports/2026-11-18-forbidden.md`。
+
 ## 0.1.4 — 2026-11-17
 
 - **同步 rustomp-circuit-designer 的电位器阻值规范化（Freedist P2）**：

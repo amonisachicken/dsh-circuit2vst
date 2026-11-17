@@ -56,6 +56,50 @@ async function readJson(req, limit = 32 * 1024 * 1024) {
 }
 
 /**
+ * Decide whether a panel request may proceed.
+ *
+ * Hosts differ in how they authenticate a route:
+ *  - newer ones admit the request themselves and pass an owner `peer` as the
+ *    handler's third argument;
+ *  - npm builds (e.g. 0.2.2-rc.1) call `handler(req, res)` only, so a peer-based
+ *    check rejects **every** request — the panel then shows `读取失败：forbidden`
+ *    even for the owner (external report, 2026-11-18).
+ *
+ * The fallback is the same guard the Harness `/api` route uses: the `connection`
+ * service's request fence (`requestRejection`, or `admit` on builds that expose
+ * the raw admission). A composition with neither surface is local and
+ * owner-only, so it is allowed.
+ *
+ * @param ctx - plugin context (`ctx.get` may resolve `connection`).
+ * @param req - incoming request.
+ * @param peer - admitted peer when the host injected one.
+ * @returns `undefined` to proceed, or the HTTP status to reject with.
+ */
+export function authorizePanelRequest(ctx, req, peer) {
+  if (peer !== undefined) return peer?.principal?.kind === 'owner' ? undefined : 403
+  const connection = typeof ctx.get === 'function' ? ctx.get('connection') : undefined
+  if (connection === undefined || connection === null) return undefined
+  try {
+    const rejection = connection.requestRejection?.(req)
+    if (typeof rejection === 'number') return rejection
+  } catch {
+    // A build whose guard throws is treated like an unavailable guard.
+  }
+  try {
+    const admission = connection.admit?.(req)
+    if (admission !== undefined && admission !== null) {
+      if (typeof admission.rejection === 'number') return admission.rejection
+      if (admission.peer !== undefined) {
+        return admission.peer?.principal?.kind === 'owner' ? undefined : 403
+      }
+    }
+  } catch {
+    // Same as above: fall through to "no guard".
+  }
+  return undefined
+}
+
+/**
  * Resolve a project reference from the panel.
  * @param service - the shared service.
  * @param value - absolute directory or project slug.
@@ -82,8 +126,11 @@ export function registerRoutes(ctx, service, webServer) {
     path: ROUTE_PREFIX,
     auth: 'required',
     handler: async (req, res, peer) => {
-      if (peer?.principal?.kind !== 'owner') {
-        json(res, 403, { error: 'forbidden' })
+      // `peer` is present on hosts that admit routes themselves; npm builds call
+      // the handler with `(req, res)` only, where the `connection` fence decides.
+      const rejection = authorizePanelRequest(ctx, req, peer)
+      if (rejection !== undefined) {
+        json(res, rejection, { error: rejection === 401 ? 'unauthorized' : 'forbidden' })
         return
       }
       const url = new URL(req.url ?? '/', 'http://circuit2vst.invalid')
