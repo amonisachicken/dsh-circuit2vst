@@ -229,7 +229,9 @@ export function registerTools(ctx, service) {
         return { job, state: await service.state({ force: true }) }
       }
       if (args.action === 'pack') {
-        const started = service.pack(resolved, { install: args.install === true })
+        // `pack()` 先跑 ngspice 对拍、再入队，所以它是 async 的：这里必须 await，
+        // 否则 `started` 是 Promise、`started.id` 是 undefined（2026-11-17 实测）。
+        const started = await service.pack(resolved, { install: args.install === true })
         const job = await service.awaitJob(started.id)
         return { job, state: await service.state({ force: true }) }
       }

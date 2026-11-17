@@ -137,8 +137,8 @@ ngspice 缺失时（例如 Windows 打包机）该步骤标记为 `skipped`；**
 |---|---|
 | DeepSeek Harness | 任意支持插件 bundle 的版本 |
 | Node.js | ≥ 20（测试与 `build:client`） |
-| rustomp 框架 | `v0.1.2`（`prepare` 自动克隆） |
-| 平台 packer | macOS `v0.1.7` / Windows `v0.3.0` / Linux `v0.1.0`（`prepare` 自动克隆） |
+| rustomp 框架 | `v0.1.3`（`prepare` 自动克隆） |
+| 平台 packer | macOS `v0.1.8` / Windows `v0.3.0` / Linux `v0.1.0`（`prepare` 自动克隆） |
 | Rust | 打包平台需要对应工具链（macOS：Xcode CLT；Windows：MSVC BuildTools；Linux：gcc + cmake） |
 | ngspice | 可选，但构建前对拍需要（macOS `brew install ngspice`，Windows/Linux 装官方包） |
 

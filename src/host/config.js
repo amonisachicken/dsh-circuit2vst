@@ -2,8 +2,8 @@
  * Configuration defaults plus the cross-repository version pins.
  *
  * The pins are the single place a release bump happens. They mirror the
- * combination rustomp documents as compatible (`docs/status.md` §1):
- * framework v0.1.2 + mac v0.1.7 + win v0.3.0 + linux v0.1.0.
+ * combination rustomp documents as compatible (`docs/status.md` §1 at v0.1.3):
+ * framework v0.1.3 + mac v0.1.8 + win v0.3.0 + linux v0.1.0.
  */
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -16,12 +16,12 @@ export const PLUGIN_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..'
 export const DESIGNER_SYMBOLS = join(PLUGIN_ROOT, 'vendor/circuit/symbols.json')
 
 /** Plugin build this Host half was written against. */
-export const PLUGIN_VERSION = '0.1.2'
+export const PLUGIN_VERSION = '0.1.3'
 
 /** The DSP framework every project links against. */
 export const FRAMEWORK = Object.freeze({
   repo: 'rustomp',
-  tag: 'v0.1.2',
+  tag: 'v0.1.3',
   label: 'rustomp 框架',
 })
 
@@ -32,7 +32,7 @@ export const FRAMEWORK = Object.freeze({
 export const PACKERS = Object.freeze({
   darwin: Object.freeze({
     repo: 'rustomp-mac-plugin',
-    tag: 'v0.1.7',
+    tag: 'v0.1.8',
     label: 'macOS 打包器',
     formats: Object.freeze(['au', 'vst3', 'clap', 'dmg']),
     needsThirdParty: true,

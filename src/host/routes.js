@@ -146,7 +146,7 @@ export function registerRoutes(ctx, service, webServer) {
               const projectDir = resolveProject(service, body.project)
               json(res, 200, {
                 ok: true,
-                job: service.pack(projectDir, {
+                job: await service.pack(projectDir, {
                   variants: body.variants,
                   formats: body.formats,
                   arch: body.arch,
