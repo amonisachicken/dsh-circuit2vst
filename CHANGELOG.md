@@ -1,5 +1,15 @@
 # 更新日志
 
+## 0.1.8 — 2026-11-18
+
+- **修复 git 安装后仿真/导入/对拍全部 ENOENT（外部反馈）**：`package.json` 的 `files` 白名单漏了 `vendor`，
+  从 GitHub 安装的产物里没有 `vendor/circuit/`，于是 `models.lib` / `symbols.json` 读不到。已把 `vendor` 加入 `files`。
+- 新增**打包自检** `test/pack-files.mjs`：跑 `npm pack --dry-run --json`，断言运行必需文件在 tarball 里
+  （`vendor/circuit/models.lib`、`symbols.json`、`assets.gen.js`、`vendor/boxdesigner/*`、`client.js`…）——"仓库有、包里没有"只有打包断言能兜住。
+- 缺 `vendor/` 时不再抛裸 `ENOENT`：`sim.js` / `verify.js` 会提示"安装包缺少 vendor/circuit（package.json 的 files 必须包含 vendor）"。
+- 反馈原文归档 `docs/reports/2026-11-18-missing-vendor.md`。
+- 验证：从真实 tarball 解包后直接跑 `runSimulation`（RC 低通，1010 点 `v(in)/v(out)`）与 `verifyCircuit`（`ok: true`）均通过。
+
 ## 0.1.7 — 2026-11-18
 
 - **体检提示按平台给安装命令（外部反馈）**：ngspice 那行不再统一写 `brew install ngspice`。

@@ -16,7 +16,7 @@ export const PLUGIN_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..'
 export const DESIGNER_SYMBOLS = join(PLUGIN_ROOT, 'vendor/circuit/symbols.json')
 
 /** Plugin build this Host half was written against. */
-export const PLUGIN_VERSION = '0.1.7'
+export const PLUGIN_VERSION = '0.1.8'
 
 /** The DSP framework every project links against. */
 export const FRAMEWORK = Object.freeze({

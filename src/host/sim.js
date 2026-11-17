@@ -30,10 +30,24 @@ const DEFAULT_FREQ = 1000
 
 /**
  * Device models, inlined into the batch netlist (simulation only).
+ *
+ * A git-installed package can miss `vendor/` when `package.json`'s `files`
+ * omits it; that used to surface as a bare ENOENT pointing at node_modules.
  * @returns the model library text.
  */
 function modelsLib() {
-  return readFileSync(MODELS_PATH, 'utf8')
+  try {
+    return readFileSync(MODELS_PATH, 'utf8')
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      throw new Error(
+        '安装包缺少 vendor/circuit/models.lib（仿真模型库）。'
+        + '这是打包裁剪问题：package.json 的 files 必须包含 "vendor"；升级到修复版或从仓库重新安装插件。',
+        { cause: error },
+      )
+    }
+    throw error
+  }
 }
 
 /**

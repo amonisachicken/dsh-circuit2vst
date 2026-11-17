@@ -1,6 +1,6 @@
 {
   "name": "dsh-circuit2vst",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "type": "module",
   "description": "把自绘电路变成多平台 VST3/AU/CLAP 插件：DSH 插件，内含 rustomp 电路/面板设计器、代码生成与平台打包的编排层。",
@@ -17,7 +17,8 @@
     "src",
     "locale/*.json",
     "docs",
-    "icon.svg"
+    "icon.svg",
+    "vendor"
   ],
   "dsh": {
     "bundle": {
@@ -35,7 +36,7 @@
   "scripts": {
     "build:client": "node scripts/build-client.mjs",
     "gen:assets": "node scripts/gen-asset-text.mjs",
-    "test": "node --test test/units.mjs test/netlist-parity.mjs test/params.mjs test/gui.mjs test/verify.mjs test/routes-auth.mjs",
+    "test": "node --test test/units.mjs test/netlist-parity.mjs test/params.mjs test/gui.mjs test/verify.mjs test/routes-auth.mjs test/pack-files.mjs",
     "test:parity": "node test/export-parity.mjs",
     "test:netlist": "node --test test/netlist-parity.mjs",
     "goldens:netlist": "node test/netlist-parity.mjs --refresh",

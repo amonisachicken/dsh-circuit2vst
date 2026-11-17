@@ -74,6 +74,22 @@ ${body}
 `
 }
 
+/** A missing `vendor/` means a trimmed install, not a broken design. */
+function readVendor(path) {
+  try {
+    return readFileSync(path, 'utf8')
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      throw new Error(
+        `安装包缺少 ${path.slice(path.indexOf('vendor/'))}（对拍需要 vendor/）。`
+        + '这是打包裁剪问题：package.json 的 files 必须包含 "vendor"；请升级或从仓库重新安装插件。',
+        { cause: error },
+      )
+    }
+    throw error
+  }
+}
+
 /**
  * Parse `.print tran` ASCII rows.
  * @param text - ngspice stdout.
@@ -104,7 +120,7 @@ export async function verifyCircuit(projectDir, options = {}) {
     return { ok: false, checks: [{ code: 'design-missing', level: 'error', msg: 'circuit/ 下没有 .design.json' }], metrics: {} }
   }
 
-  const symbols = JSON.parse(readFileSync(join(PLUGIN_ROOT, 'vendor/circuit/symbols.json'), 'utf8'))
+  const symbols = JSON.parse(readVendor(join(PLUGIN_ROOT, 'vendor/circuit/symbols.json')))
   const doc = JSON.parse(readFileSync(design, 'utf8'))
   const { cir, lints } = generateNetlist(doc, symbols)
   const checks = []
@@ -126,7 +142,7 @@ export async function verifyCircuit(projectDir, options = {}) {
     return { ok: null, skipped: true, reason: '没有 ngspice（安装后才会真正对拍）', design, checks, metrics: {} }
   }
 
-  const models = readFileSync(join(PLUGIN_ROOT, 'vendor/circuit/models.lib'), 'utf8')
+  const models = readVendor(join(PLUGIN_ROOT, 'vendor/circuit/models.lib'))
   const batchPath = join(tmpdir(), `c2v-verify-${process.pid}.cir`)
   const { writeFileSync } = await import('node:fs')
   writeFileSync(batchPath, buildBatch(cir, models), 'utf8')
