@@ -7505,6 +7505,8 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
       'projects.selected': 'Selected',
       'projects.busyHint': 'Compiling can take a few minutes.',
       'projects.selectFirst': 'Create or select a project first.',
+      'projects.selectFirst.title': 'Create a project before opening a designer',
+      'designer.needsProject': 'No project selected',
       'projects.design': 'design',
       'projects.openPanel': 'Panel designer',
       'projects.openCircuit': 'Circuit designer',
@@ -7632,6 +7634,8 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
       'projects.selected': '已选',
       'projects.busyHint': '首次编译可能要几分钟。',
       'projects.selectFirst': '先创建或选择一个项目。',
+      'projects.selectFirst.title': '先创建项目，才能打开设计器',
+      'designer.needsProject': '还没有选中项目',
       'projects.design': '有设计',
       'projects.openPanel': '面板设计器',
       'projects.openCircuit': '电路设计器',
@@ -7928,6 +7932,25 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
       )
     }
 
+    /**
+     * Shown when a designer is reached without a project (defensive: the tab is
+     * disabled, but a project can also disappear while the designer is open).
+     */
+    function EmptyDesigner({ t, setMode }) {
+      return h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          gap: '12px', padding: '48px 16px', textAlign: 'center',
+          border: '1px dashed var(--dsw-alias-border-l2)', borderRadius: '12px',
+          color: 'var(--dsw-alias-label-secondary)',
+        },
+      },
+        h('div', { style: { fontSize: '14px', fontWeight: 600, color: 'var(--dsw-alias-label-primary)' } }, t('designer.needsProject')),
+        h('div', { style: { fontSize: '12px' } }, t('projects.selectFirst')),
+        h('button', { type: 'button', style: S.buttonPrimary, onClick: () => setMode('workflow') }, t('designer.workflow')),
+      )
+    }
+
     /** localStorage key holding the last focused project directory. */
     const SELECTED_PROJECT_KEY = 'circuit2vst.selectedProject'
 
@@ -8053,6 +8076,8 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
       const selectedProject = state === null
         ? null
         : state.projects.find((project) => project.dir === selected) ?? null
+      /** The two designers are only usable with a project selected. */
+      const designerLocked = selectedProject === null
       /** Bridge between the circuit canvas and the Host routes. */
       const circuitApi = React.useMemo(() => {
         if (selectedProject === null) return null
@@ -8101,13 +8126,25 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
             style: mode === 'workflow' ? buttonStyle(true) : buttonStyle(false),
             onClick: () => { setMode('workflow') },
           }, t('designer.workflow')),
+          // Both designers need a project: without one they have nothing to open,
+          // and the old behaviour was a blank page (external report, 2026-11-18).
           h('button', {
-            style: mode === 'designer' ? buttonStyle(true) : buttonStyle(false),
-            onClick: () => { setMode('designer') },
+            type: 'button',
+            disabled: designerLocked,
+            title: designerLocked ? t('projects.selectFirst.title') : undefined,
+            style: designerLocked
+              ? { ...S.button, ...S.buttonDisabled, cursor: 'default' }
+              : mode === 'designer' ? buttonStyle(true) : buttonStyle(false),
+            onClick: () => { if (!designerLocked) setMode('designer') },
           }, t('designer.tab')),
           h('button', {
-            style: mode === 'circuit' ? buttonStyle(true) : buttonStyle(false),
-            onClick: () => { setMode('circuit') },
+            type: 'button',
+            disabled: designerLocked,
+            title: designerLocked ? t('projects.selectFirst.title') : undefined,
+            style: designerLocked
+              ? { ...S.button, ...S.buttonDisabled, cursor: 'default' }
+              : mode === 'circuit' ? buttonStyle(true) : buttonStyle(false),
+            onClick: () => { if (!designerLocked) setMode('circuit') },
           }, t('circuit.tab')),
         ),
         h('button', { style: buttonStyle(false), disabled, onClick: () => { void load(true) } }, t('action.refresh')),
@@ -8139,7 +8176,7 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
             toastLine,
             h('span', { style: { ...S.subtitle, marginLeft: 'auto' } }, t('circuit.stage')),
           ),
-          h(CircuitCanvas, {
+          selectedProject === null ? h(EmptyDesigner, { t, setMode }) : h(CircuitCanvas, {
             project: selectedProject,
             api: circuitApi,
             t,
@@ -8155,7 +8192,7 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
             h('span', { style: S.subtitle }, selectedProject === null ? t('projects.selectFirst') : (selectedProject.name ?? selectedProject.slug)),
             toastLine,
           ),
-          h(PanelDesigner, {
+          selectedProject === null ? h(EmptyDesigner, { t, setMode }) : h(PanelDesigner, {
             project: selectedProject,
             callApi,
             t,
