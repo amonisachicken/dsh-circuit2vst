@@ -14,6 +14,7 @@ import { join } from 'node:path'
 
 import { readFileSync } from 'node:fs'
 import { auditImplicitConnections, generateNetlist } from '../src/client/circuit-netlist.js'
+import { ngspiceHint, pythonHint } from '../src/host/doctor.js'
 import { parseArtifacts, packArgs } from '../src/host/pack.js'
 
 const SYMBOLS = JSON.parse(readFileSync(new URL('../vendor/circuit/symbols.json', import.meta.url), 'utf8'))
@@ -217,4 +218,21 @@ test('a pot below 1 Ω is an error', () => {
   const lint = generated.lints.find((entry) => entry.code === 'pot-value-range')
   assert.ok(lint)
   assert.equal(lint.level, 'error')
+})
+
+test('the ngspice hint follows the platform and keeps the source recipe', () => {
+  const linux = ngspiceHint('linux')
+  assert.ok(!linux.includes('brew'), linux)
+  assert.match(linux, /apt install ngspice/)
+  assert.match(linux, /pacman -S ngspice/)
+  assert.match(ngspiceHint('darwin'), /^brew install ngspice/)
+  assert.match(ngspiceHint('win32'), /mingw-w64-x86_64-ngspice/)
+  for (const platform of ['darwin', 'linux', 'win32']) {
+    assert.match(ngspiceHint(platform), /git clone https:\/\/github\.com\/ngspice\/ngspice\.git/, platform)
+  }
+})
+
+test('the python hint does not tell Linux users to brew', () => {
+  assert.ok(!pythonHint('linux').includes('brew'))
+  assert.match(pythonHint('darwin'), /brew install python/)
 })

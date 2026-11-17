@@ -275,7 +275,7 @@ Red Face 修好前后：坏走线 = `X2.GND 位于导线 w25 / w51 的中间 →
 
 ![面板设计器（深色）](/Users/gutoushanghaidai/deve/dsh-circuit2vst/docs/panel-dark.png)
 
-## macOS 从源码装 ngspice（本机验证过的配方）
+## 从源码装 ngspice（macOS 已验证的配方，Linux 同样适用）
 
 没有 brew/macports 包，或想钉版本时：
 

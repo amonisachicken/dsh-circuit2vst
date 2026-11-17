@@ -1,5 +1,13 @@
 # 更新日志
 
+## 0.1.7 — 2026-11-18
+
+- **体检提示按平台给安装命令（外部反馈）**：ngspice 那行不再统一写 `brew install ngspice`。
+  macOS → brew；Linux → `apt` / `pacman` / `dnf` 三种发行版写法；Windows → MSYS2 `pacman -S mingw-w64-x86_64-ngspice`。
+  三平台都保留「从源码编译」的提示（`git clone … && ./autogen.sh && ./configure … && make`，配方见 docs/DETAIL.md）。
+- python3 ≥ 3.11 的提示同样按平台给（Linux 不再提示 brew）。
+- 新增两条单元用例：Linux 的 ngspice/python 提示不得出现 brew；三平台都必须保留源码编译命令。
+
 ## 0.1.6 — 2026-11-18
 
 - **无项目时不再白屏（外部反馈）**：顶部的「面板设计器」「电路设计器」入口在**没有选中项目时灰显且不可点击**

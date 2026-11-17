@@ -38,6 +38,51 @@ function pythonAtLeast(triple) {
 }
 
 /**
+ * Install hints differ per platform: a Linux user must not be told to run brew.
+ * @param platform - `process.platform` value.
+ * @param hints - per-platform hint text (`{darwin, linux, win32, other}`).
+ * @returns the hint for this platform.
+ */
+export function platformHint(platform, hints) {
+  if (platform === 'darwin') return hints.darwin
+  if (platform === 'linux') return hints.linux
+  if (platform === 'win32') return hints.win32
+  return hints.other
+}
+
+/** The source-build fallback, kept in every ngspice hint. */
+const NGSPICE_SOURCE_HINT = '或从源码编译（配方见 docs/DETAIL.md，Linux 同样适用）：git clone https://github.com/ngspice/ngspice.git && cd ngspice && ./autogen.sh && ./configure --without-x --disable-openmp --without-readline && make -j"$(nproc)" && sudo make install'
+
+/**
+ * How to install ngspice on this platform, plus the source-build fallback.
+ * @param platform - `process.platform` value.
+ * @returns install hint text.
+ */
+export function ngspiceHint(platform) {
+  const install = platformHint(platform, {
+    darwin: 'brew install ngspice',
+    linux: '按发行版安装：sudo apt install ngspice（Debian/Ubuntu）、sudo pacman -S ngspice（Arch/CachyOS）、sudo dnf install ngspice（Fedora）',
+    win32: 'MSYS2：pacman -S mingw-w64-x86_64-ngspice（或官方 Windows 安装包）',
+    other: '安装 ngspice',
+  })
+  return `${install}；${NGSPICE_SOURCE_HINT}；缺失只影响仿真与 ngspice 对拍，不影响生成与打包`
+}
+
+/**
+ * How to install python3 ≥ 3.11 on this platform.
+ * @param platform - `process.platform` value.
+ * @returns install hint text.
+ */
+export function pythonHint(platform) {
+  return platformHint(platform, {
+    darwin: 'brew install python',
+    linux: 'sudo apt install python3（Debian/Ubuntu）或 sudo pacman -S python（Arch/CachyOS）',
+    win32: 'winget install Python.Python.3.12，或 MSYS2 里 pacman -S python',
+    other: '安装 python3 ≥ 3.11',
+  })
+}
+
+/**
  * Read the ngspice version out of its banner.
  * @returns `ngspice-47`-style text, or null when the binary is absent.
  */
@@ -94,7 +139,7 @@ export async function probeEnvironment(settings) {
     'python3 ≥ 3.11',
     python === null ? 'missing' : pythonAtLeast(pythonTriple) ? 'ok' : 'warn',
     python ?? '未安装',
-    pythonAtLeast(pythonTriple) ? '' : '框架的 plugin_meta.py 需要 python3 ≥ 3.11（brew install python）',
+    pythonAtLeast(pythonTriple) ? '' : `框架的 plugin_meta.py 需要 python3 ≥ 3.11（${pythonHint(process.platform)}）`,
     true,
   ))
 
@@ -167,7 +212,7 @@ export async function probeEnvironment(settings) {
     'ngspice（可选）',
     ngspice === null ? 'missing' : 'ok',
     ngspice === null ? '未安装：电路设计器的【仿真】与对拍不可用' : ngspice,
-    'brew install ngspice；缺失只影响仿真与 ngspice 对拍，不影响生成与打包',
+    ngspiceHint(process.platform),
     false,
   ))
   checks.push(row(
