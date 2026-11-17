@@ -1,5 +1,13 @@
 # 更新日志
 
+## 0.1.4 — 2026-11-17
+
+- **同步 rustomp-circuit-designer 的电位器阻值规范化（Freedist P2）**：
+  - 电位器面板值写 `1M` 时，导出网表按 **meg** 处理（`0.5meg`，不再写成 `0.5M` 被 SPICE 当成 milli）；
+  - 新增三条 lint：`pot-value-milli`（warn，提示改写成 `1meg`）、`pot-value-range`（error，超出 1 Ω…1 GΩ）、
+    `pot-value-bad`（error，读不出数值）——电路设计器的网表卡片与徽标会直接显示；
+  - 与上游 `backend/src/netlist.rs` 的 `half_value` / `panel_value_ohms` / `looks_like_mega_typo` 逐条对齐，并按其测试断言补了单元用例。
+
 ## 0.1.3 — 2026-11-17
 
 - **钉到 rustomp v0.1.3**（`src/host/config.js`），配套 macOS 打包器升到 v0.1.8、Windows v0.3.0、Linux v0.1.0（对齐上游 `docs/status.md` §1 的兼容组合）。

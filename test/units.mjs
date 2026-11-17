@@ -13,7 +13,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { readFileSync } from 'node:fs'
-import { auditImplicitConnections } from '../src/client/circuit-netlist.js'
+import { auditImplicitConnections, generateNetlist } from '../src/client/circuit-netlist.js'
 import { parseArtifacts, packArgs } from '../src/host/pack.js'
 
 const SYMBOLS = JSON.parse(readFileSync(new URL('../vendor/circuit/symbols.json', import.meta.url), 'utf8'))
@@ -181,4 +181,40 @@ test('implicit connections: a single overshooting stub is only a warning', () =>
 test('implicit connections: a well-drawn design has none', () => {
   const doc = JSON.parse(readFileSync(new URL('../vendor/circuit/examples/diode-clip.design.json', import.meta.url), 'utf8'))
   assert.deepEqual(auditImplicitConnections(doc, SYMBOLS), [])
+})
+
+/** Minimal design with one potentiometer value, mirroring the upstream P2 test. */
+function potDesign(value) {
+  const part = (id, ref, symbol, x, y) => ({ id, ref, symbol, at: { x, y }, rot: 0, mirror: 'none' })
+  return {
+    name: 'pot',
+    parts: [
+      { ...part('p1', 'P1', 'potentiometer', 0, 0), value },
+      part('p2', 'GND1', 'earth', -12.5, 12.5),
+      part('p3', 'IN1', 'node-in', 25, 0),
+    ],
+    wires: [],
+  }
+}
+
+test('a pot labelled 1M exports as meg and warns (Freedist P2)', () => {
+  const generated = generateNetlist(potDesign('1M'), SYMBOLS)
+  assert.ok(generated.cir.includes('0.5meg'), generated.cir)
+  assert.ok(!generated.cir.includes('0.5M'))
+  const lint = generated.lints.find((entry) => entry.code === 'pot-value-milli')
+  assert.ok(lint, 'should warn about the milli reading')
+  assert.equal(lint.level, 'warn')
+  assert.match(lint.msg, /1meg/)
+})
+
+test('a sane pot value has no pot lint', () => {
+  const generated = generateNetlist(potDesign('500k'), SYMBOLS)
+  assert.deepEqual(generated.lints.filter((entry) => entry.code.startsWith('pot-')), [])
+})
+
+test('a pot below 1 Ω is an error', () => {
+  const generated = generateNetlist(potDesign('0'), SYMBOLS)
+  const lint = generated.lints.find((entry) => entry.code === 'pot-value-range')
+  assert.ok(lint)
+  assert.equal(lint.level, 'error')
 })

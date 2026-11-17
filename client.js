@@ -3476,6 +3476,44 @@ function sortParts(parts) {
 }
 
 /**
+ * Panel resistance text → ohms, using the same suffixes as SPICE (`M` = milli,
+ * exactly like SPICE). The one place a bare `M` is treated as mega is
+ * {@link halfValue}: a potentiometer has no legitimate milliohm value.
+ * @param value - panel value text.
+ * @returns ohms, or null when it does not parse.
+ */
+function panelValueOhms(value) {
+  const text = String(value).trim().toLowerCase()
+  const split = text.search(/[^0-9.+\-e]/)
+  const number = split < 0 ? text : text.slice(0, split)
+  const unit = split < 0 ? '' : text.slice(split)
+  const parsed = Number(number)
+  if (!Number.isFinite(parsed)) return null
+  const multiplier = unit.startsWith('meg')
+    ? 1e6
+    : unit.startsWith('mil')
+      ? 25.4e-6
+      : unit.startsWith('t') ? 1e12
+        : unit.startsWith('g') ? 1e9
+          : unit.startsWith('k') ? 1e3
+            : unit.startsWith('m') ? 1e-3
+              : unit.startsWith('u') ? 1e-6
+                : unit.startsWith('n') ? 1e-9
+                  : unit.startsWith('p') ? 1e-12
+                    : 1
+  return parsed * multiplier
+}
+
+/**
+ * `1M` / `0.5m` style values: ends with `m` but is not `meg`/`mil`.
+ * @param raw - panel value text.
+ * @returns whether the value looks like a mega typo.
+ */
+function looksLikeMegaTypo(raw) {
+  return String(raw).trim().toLowerCase().endsWith('m')
+}
+
+/**
  * Nominal resistance of one half of a potentiometer (50 % tap), keeping the
  * unit suffix: `500k` → `250k`.
  * @param value - manifest value, e.g. `500k`.
@@ -3486,13 +3524,16 @@ function halfValue(value) {
   const split = /[^0-9.+\-eE]/.exec(text)
   const number = split === null ? text : text.slice(0, split.index)
   const unit = split === null ? '' : text.slice(split.index)
+  // `M` is milli in SPICE, but a potentiometer labelled `1M` is 1 MΩ and a
+  // potentiometer has no milliohm value, so only this pot path normalises it.
+  const normalised = unit.toLowerCase() === 'm' ? 'meg' : unit
   const parsed = Number(number)
   if (!Number.isFinite(parsed) || number.trim() === '') return String(value)
   const half = parsed / 2
   // Rust prints `{:.6}` then trims trailing zeros and a bare dot.
   let rendered = half.toFixed(6)
   rendered = rendered.replace(/0+$/, '').replace(/\.$/, '')
-  return `${rendered}${unit}`
+  return `${rendered}${normalised}`
 }
 
 /**
@@ -3570,6 +3611,31 @@ function generateNetlist(doc, table) {
       }
     } else if (models.length > 0) {
       lints.push({ level: 'error', code: 'model-missing', msg: `${part.ref}：没选型号（${models.join('/')} 之一）` })
+    }
+
+    // 电位器阻值：`1M` is 1 mΩ in SPICE, which pins the bias network while the
+    // export stays silent — this is the Freedist P2 report. The netlist already
+    // normalises a pot's bare `M` to `meg`; say so, and reject implausible ohms.
+    if (part.symbol === 'potentiometer' && part.value !== undefined && part.value !== null) {
+      const raw = String(part.value)
+      const ohms = panelValueOhms(raw)
+      if (ohms === null) {
+        lints.push({ level: 'error', code: 'pot-value-bad', msg: `${part.ref}：电位器阻值 \`${raw}\` 读不出数值` })
+      } else if (!(ohms >= 1 && ohms <= 1e9)) {
+        if (looksLikeMegaTypo(raw) && ohms > 0) {
+          lints.push({
+            level: 'warn',
+            code: 'pot-value-milli',
+            msg: `${part.ref}：电位器阻值 \`${raw}\` 在 SPICE 里是 ${ohms} Ω（\`M\` = milli）；导出时已按 **meg** 处理。建议直接写 \`${raw.trim().replace(/[Mm]+$/, '')}meg\`。`,
+          })
+        } else {
+          lints.push({
+            level: 'error',
+            code: 'pot-value-range',
+            msg: `${part.ref}：电位器阻值 \`${raw}\` = ${ohms} Ω，超出合理范围（1 Ω … 1 GΩ）。`,
+          })
+        }
+      }
     }
 
     for (const pin of symbol.pins ?? []) {
