@@ -563,3 +563,86 @@ export function auditImplicitConnections(doc, table) {
   }
   return entries
 }
+
+/**
+ * Distance from a point to a segment, in millimetres.
+ * @param point - candidate.
+ * @param start - segment start.
+ * @param end - segment end.
+ * @returns distance.
+ */
+export function circuitDistToSegment(point, start, end) {
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const lengthSquared = dx * dx + dy * dy
+  if (lengthSquared < 1e-12) return Math.hypot(point.x - start.x, point.y - start.y)
+  let t = ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared
+  t = Math.max(0, Math.min(1, t))
+  return Math.hypot(point.x - (start.x + t * dx), point.y - (start.y + t * dy))
+}
+
+/**
+ * Rotated bounding box of a placed part.
+ * @param part - document part.
+ * @param symbol - symbol spec.
+ * @returns `{minX, minY, maxX, maxY}`.
+ */
+export function circuitPartBox(part, symbol) {
+  const corners = [
+    { x: -symbol.origin.x, y: -symbol.origin.y },
+    { x: symbol.canvas.w - symbol.origin.x, y: -symbol.origin.y },
+    { x: -symbol.origin.x, y: symbol.canvas.h - symbol.origin.y },
+    { x: symbol.canvas.w - symbol.origin.x, y: symbol.canvas.h - symbol.origin.y },
+  ].map((corner) => toWorld(corner, part))
+  const xs = corners.map((corner) => corner.x)
+  const ys = corners.map((corner) => corner.y)
+  return { minX: Math.min(...xs), minY: Math.min(...ys), maxX: Math.max(...xs), maxY: Math.max(...ys) }
+}
+
+/**
+ * Hit test with a 5 mm tolerance; a wire wins when it is within 1 mm of the part
+ * distance (wires are thinner and harder to hit).
+ * @param doc - document.
+ * @param symbols - symbol table.
+ * @param at - cursor in millimetres.
+ * @param tolerance - hit radius in millimetres.
+ * @returns `{partId, wireId}` — at most one is non-null.
+ */
+export function circuitHitTest(doc, symbols, at, tolerance = 5) {
+  let bestPart = null
+  let bestWire = null
+  // Later parts are drawn on top, so they must win ties: iterate back to front.
+  // The old forward order made an overlapping click hit the *oldest* part.
+  for (let index = doc.parts.length - 1; index >= 0; index -= 1) {
+    const part = doc.parts[index]
+    const symbol = symbols[part.symbol]
+    if (symbol === undefined) continue
+    const box = circuitPartBox(part, symbol)
+    const insetX = (box.maxX - box.minX) * 0.25
+    const insetY = (box.maxY - box.minY) * 0.25
+    const inner = { minX: box.minX + insetX, maxX: box.maxX - insetX, minY: box.minY + insetY, maxY: box.maxY - insetY }
+    const boxDistance = Math.hypot(
+      Math.max(inner.minX - at.x, 0, at.x - inner.maxX),
+      Math.max(inner.minY - at.y, 0, at.y - inner.maxY),
+    )
+    const pinDistance = Math.min(...symbol.pins.map((pin) => {
+      const world = toWorld(pin.at, part)
+      return Math.hypot(world.x - at.x, world.y - at.y)
+    }))
+    const distance = Math.min(boxDistance, pinDistance)
+    if (distance <= tolerance && (bestPart === null || distance < bestPart.distance)) {
+      bestPart = { id: part.id, distance }
+    }
+  }
+  for (const wire of doc.wires) {
+    const distance = circuitDistToSegment(at, wire.points[0], wire.points[1])
+    if (distance <= tolerance && (bestWire === null || distance < bestWire.distance)) {
+      bestWire = { id: wire.id, distance }
+    }
+  }
+  const preferWire = bestWire !== null && (bestPart === null || bestWire.distance <= bestPart.distance + 1)
+  return {
+    partId: preferWire ? null : (bestPart?.id ?? null),
+    wireId: preferWire ? bestWire.id : null,
+  }
+}

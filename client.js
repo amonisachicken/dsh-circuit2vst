@@ -3862,6 +3862,89 @@ function auditImplicitConnections(doc, table) {
   return entries
 }
 
+/**
+ * Distance from a point to a segment, in millimetres.
+ * @param point - candidate.
+ * @param start - segment start.
+ * @param end - segment end.
+ * @returns distance.
+ */
+function circuitDistToSegment(point, start, end) {
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const lengthSquared = dx * dx + dy * dy
+  if (lengthSquared < 1e-12) return Math.hypot(point.x - start.x, point.y - start.y)
+  let t = ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared
+  t = Math.max(0, Math.min(1, t))
+  return Math.hypot(point.x - (start.x + t * dx), point.y - (start.y + t * dy))
+}
+
+/**
+ * Rotated bounding box of a placed part.
+ * @param part - document part.
+ * @param symbol - symbol spec.
+ * @returns `{minX, minY, maxX, maxY}`.
+ */
+function circuitPartBox(part, symbol) {
+  const corners = [
+    { x: -symbol.origin.x, y: -symbol.origin.y },
+    { x: symbol.canvas.w - symbol.origin.x, y: -symbol.origin.y },
+    { x: -symbol.origin.x, y: symbol.canvas.h - symbol.origin.y },
+    { x: symbol.canvas.w - symbol.origin.x, y: symbol.canvas.h - symbol.origin.y },
+  ].map((corner) => toWorld(corner, part))
+  const xs = corners.map((corner) => corner.x)
+  const ys = corners.map((corner) => corner.y)
+  return { minX: Math.min(...xs), minY: Math.min(...ys), maxX: Math.max(...xs), maxY: Math.max(...ys) }
+}
+
+/**
+ * Hit test with a 5 mm tolerance; a wire wins when it is within 1 mm of the part
+ * distance (wires are thinner and harder to hit).
+ * @param doc - document.
+ * @param symbols - symbol table.
+ * @param at - cursor in millimetres.
+ * @param tolerance - hit radius in millimetres.
+ * @returns `{partId, wireId}` — at most one is non-null.
+ */
+function circuitHitTest(doc, symbols, at, tolerance = 5) {
+  let bestPart = null
+  let bestWire = null
+  // Later parts are drawn on top, so they must win ties: iterate back to front.
+  // The old forward order made an overlapping click hit the *oldest* part.
+  for (let index = doc.parts.length - 1; index >= 0; index -= 1) {
+    const part = doc.parts[index]
+    const symbol = symbols[part.symbol]
+    if (symbol === undefined) continue
+    const box = circuitPartBox(part, symbol)
+    const insetX = (box.maxX - box.minX) * 0.25
+    const insetY = (box.maxY - box.minY) * 0.25
+    const inner = { minX: box.minX + insetX, maxX: box.maxX - insetX, minY: box.minY + insetY, maxY: box.maxY - insetY }
+    const boxDistance = Math.hypot(
+      Math.max(inner.minX - at.x, 0, at.x - inner.maxX),
+      Math.max(inner.minY - at.y, 0, at.y - inner.maxY),
+    )
+    const pinDistance = Math.min(...symbol.pins.map((pin) => {
+      const world = toWorld(pin.at, part)
+      return Math.hypot(world.x - at.x, world.y - at.y)
+    }))
+    const distance = Math.min(boxDistance, pinDistance)
+    if (distance <= tolerance && (bestPart === null || distance < bestPart.distance)) {
+      bestPart = { id: part.id, distance }
+    }
+  }
+  for (const wire of doc.wires) {
+    const distance = circuitDistToSegment(at, wire.points[0], wire.points[1])
+    if (distance <= tolerance && (bestWire === null || distance < bestWire.distance)) {
+      bestWire = { id: wire.id, distance }
+    }
+  }
+  const preferWire = bestWire !== null && (bestPart === null || bestWire.distance <= bestPart.distance + 1)
+  return {
+    partId: preferWire ? null : (bestPart?.id ?? null),
+    wireId: preferWire ? bestWire.id : null,
+  }
+}
+
 // ===== src/client/circuit-scope.js =====
 /**
  * Simulation dialog and scope for the circuit designer (M5).
@@ -4416,41 +4499,6 @@ const circuitMmToScreen = (point, view) => ({ x: point.x * view.scale + view.pan
 const circuitScreenToMm = (point, view) => ({ x: (point.x - view.pan.x) / view.scale, y: (point.y - view.pan.y) / view.scale })
 
 /**
- * Distance from a point to a segment, in millimetres.
- * @param point - candidate.
- * @param start - segment start.
- * @param end - segment end.
- * @returns distance.
- */
-function circuitDistToSegment(point, start, end) {
-  const dx = end.x - start.x
-  const dy = end.y - start.y
-  const lengthSquared = dx * dx + dy * dy
-  if (lengthSquared < 1e-12) return Math.hypot(point.x - start.x, point.y - start.y)
-  let t = ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared
-  t = Math.max(0, Math.min(1, t))
-  return Math.hypot(point.x - (start.x + t * dx), point.y - (start.y + t * dy))
-}
-
-/**
- * Rotated bounding box of a placed part.
- * @param part - document part.
- * @param symbol - symbol spec.
- * @returns `{minX, minY, maxX, maxY}`.
- */
-function circuitPartBox(part, symbol) {
-  const corners = [
-    { x: -symbol.origin.x, y: -symbol.origin.y },
-    { x: symbol.canvas.w - symbol.origin.x, y: -symbol.origin.y },
-    { x: -symbol.origin.x, y: symbol.canvas.h - symbol.origin.y },
-    { x: symbol.canvas.w - symbol.origin.x, y: symbol.canvas.h - symbol.origin.y },
-  ].map((corner) => toWorld(corner, part))
-  const xs = corners.map((corner) => corner.x)
-  const ys = corners.map((corner) => corner.y)
-  return { minX: Math.min(...xs), minY: Math.min(...ys), maxX: Math.max(...xs), maxY: Math.max(...ys) }
-}
-
-/**
  * Where the reference label sits: below the rotated box, or right of it when the
  * part is taller than wide.
  * @param part - document part.
@@ -4495,50 +4543,6 @@ function circuitFitView(doc, symbols, viewport) {
   const centerX = (minX + maxX) / 2
   const centerY = (minY + maxY) / 2
   return { scale, pan: { x: viewport.w / 2 - centerX * scale, y: viewport.h / 2 - centerY * scale } }
-}
-
-/**
- * Hit test with a 5 mm tolerance; a wire wins when it is within 1 mm of the part
- * distance (wires are thinner and harder to hit).
- * @param doc - document.
- * @param symbols - symbol table.
- * @param at - cursor in millimetres.
- * @returns `{partId, wireId}` — at most one is non-null.
- */
-function circuitHitTest(doc, symbols, at) {
-  let bestPart = null
-  let bestWire = null
-  for (const part of doc.parts) {
-    const symbol = symbols[part.symbol]
-    if (symbol === undefined) continue
-    const box = circuitPartBox(part, symbol)
-    const insetX = (box.maxX - box.minX) * 0.25
-    const insetY = (box.maxY - box.minY) * 0.25
-    const inner = { minX: box.minX + insetX, maxX: box.maxX - insetX, minY: box.minY + insetY, maxY: box.maxY - insetY }
-    const boxDistance = Math.hypot(
-      Math.max(inner.minX - at.x, 0, at.x - inner.maxX),
-      Math.max(inner.minY - at.y, 0, at.y - inner.maxY),
-    )
-    const pinDistance = Math.min(...symbol.pins.map((pin) => {
-      const world = toWorld(pin.at, part)
-      return Math.hypot(world.x - at.x, world.y - at.y)
-    }))
-    const distance = Math.min(boxDistance, pinDistance)
-    if (distance <= HIT_TOLERANCE_MM && (bestPart === null || distance < bestPart.distance)) {
-      bestPart = { id: part.id, distance }
-    }
-  }
-  for (const wire of doc.wires) {
-    const distance = circuitDistToSegment(at, wire.points[0], wire.points[1])
-    if (distance <= HIT_TOLERANCE_MM && (bestWire === null || distance < bestWire.distance)) {
-      bestWire = { id: wire.id, distance }
-    }
-  }
-  const preferWire = bestWire !== null && (bestPart === null || bestWire.distance <= bestPart.distance + 1)
-  return {
-    partId: preferWire ? null : (bestPart?.id ?? null),
-    wireId: preferWire ? bestWire.id : null,
-  }
 }
 
 /**
@@ -5081,6 +5085,9 @@ function CircuitCanvas({ project, api, t, onError }) {
 
   /** Switch mode through both the ref (for handlers) and React state. */
   const setMode = (next) => {
+    // A pending double-click must not survive a mode switch: the first click in
+    // copy/move/place would otherwise be swallowed as "second click" (report B).
+    lastClickRef.current = { id: null, at: 0 }
     modeRef.current = next
     setModeState(next)
   }
@@ -5511,7 +5518,7 @@ function CircuitCanvas({ project, api, t, onError }) {
     const point = pointOf(event)
     if (point === null) return
     cursorMmRef.current = { x: circuitSnap(point.x), y: circuitSnap(point.y) }
-    const hit = circuitHitTest(doc, symbols, point)
+    const hit = circuitHitTest(doc, symbols, point, HIT_TOLERANCE_MM)
     const current = modeRef.current
 
     // Middle button pans in every mode.
@@ -5523,9 +5530,11 @@ function CircuitCanvas({ project, api, t, onError }) {
     if (event.button !== 0) return
 
     // Double click on a part opens its properties (single click already selects);
-    // on OUT / a test point it opens the scope for that net instead.
+    // on OUT / a test point it opens the scope for that net instead. Only in
+    // view mode: copy/move/place must consume the click themselves.
     const now = performance.now()
-    if (hit.partId !== null && lastClickRef.current.id === hit.partId && now - lastClickRef.current.at < 400) {
+    const canDoubleClick = current.kind === 'view' && !moveArmedRef.current && dragRef.current === null
+    if (canDoubleClick && hit.partId !== null && lastClickRef.current.id === hit.partId && now - lastClickRef.current.at < 400) {
       lastClickRef.current = { id: null, at: 0 }
       const part = doc.parts.find((candidate) => candidate.id === hit.partId)
       const instrument = part !== undefined && (part.symbol === 'node-out' || part.symbol === 'test-point')
@@ -5626,7 +5635,7 @@ function CircuitCanvas({ project, api, t, onError }) {
       }
       return
     }
-    if (doc !== null) setHover(circuitHitTest(doc, symbols, point))
+    if (doc !== null) setHover(circuitHitTest(doc, symbols, point, HIT_TOLERANCE_MM))
   }
 
   const onPointerUp = (event) => {
