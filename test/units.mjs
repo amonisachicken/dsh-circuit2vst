@@ -236,3 +236,23 @@ test('the python hint does not tell Linux users to brew', () => {
   assert.ok(!pythonHint('linux').includes('brew'))
   assert.match(pythonHint('darwin'), /brew install python/)
 })
+
+test('rotated sprites use a wrapping <g>, not a nested-svg transform (WebKitGTK)', async () => {
+  const { newDoc, factory } = await import('../vendor/boxdesigner/model.js')
+  const { panelSvg } = await import('../vendor/boxdesigner/exporter.js')
+  const { ASSET_TEXT } = await import('../vendor/boxdesigner/assets.text.js')
+  const { mergedAssets } = await import('../vendor/boxdesigner/model.js')
+
+  const doc = newDoc({ name: 'rot', preset: '1590B' })
+  const knob = factory.knob(doc, { asset: 'knob_round_dark', param: 'gain', center: [20, 20] })
+  doc.elements.push(knob)
+  const assets = mergedAssets(doc, ASSET_TEXT)
+
+  const turned = panelSvg(doc, assets, { controls: true, values: { [knob.id]: 0.75 } })
+  assert.match(turned, /<g transform="rotate\([\d.-]+ [\d.]+ [\d.]+\)">/, '旋转应写在 <g transform> 上')
+  const sprite = turned.slice(turned.indexOf('<g transform="rotate('))
+  assert.doesNotMatch(sprite.slice(0, 400), /<svg[^>]*\btransform=/, '内层 <svg> 不应再带 transform（WebKitGTK 忽略）')
+
+  const centred = panelSvg(doc, assets, { controls: true, values: { [knob.id]: 0.5 } })
+  assert.doesNotMatch(centred, /<g transform="rotate\(/, '0.5 时不需要旋转包裹')
+})

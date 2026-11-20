@@ -80,9 +80,16 @@ export function placeAsset({ assetId, text, x, y, w, h, rot = 0 }) {
   const a = asset(assetId, text);
   const vb = a.viewBox.split(" ").map(Number);
   const size = [w ?? vb[2] * (25.4 / 72), h ?? vb[3] * (25.4 / 72)];
-  const t = rot ? ` transform="rotate(${num(rot)} ${num(x + size[0] / 2)} ${num(y + size[1] / 2)})"` : "";
-  return (
+  const sprite =
     `<svg x="${num(x)}" y="${num(y)}" width="${num(size[0])}" height="${num(size[1])}" ` +
-    `viewBox="${a.viewBox}"${t}>${a.inner}</svg>`
-  );
+    `viewBox="${a.viewBox}">${a.inner}</svg>`;
+  if (!rot) return sprite;
+  // Rotate on a wrapping <g>: `transform` on a nested <svg> is SVG 2 and is
+  // ignored by WebKitGTK (the Linux Tauri client), where the knob sprite then
+  // never turns even though the value/`rotate()` change. <g transform> works in
+  // every engine. The centre stays in the outer millimetre coordinate system,
+  // which is exactly the wrapper's frame.
+  const cx = num(x + size[0] / 2);
+  const cy = num(y + size[1] / 2);
+  return `<g transform="rotate(${num(rot)} ${cx} ${cy})">${sprite}</g>`;
 }

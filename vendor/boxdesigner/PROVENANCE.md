@@ -9,8 +9,16 @@
 | commit | `0716a7f18b3dfa5d61ebe7988f550b9a662a8a05`（2026-11-15） |
 | 许可 | **GPL-3.0-or-later**（见上游 `LICENSE`） |
 | 拷贝的文件 | `src/model.js`、`src/exporter.js`、`src/embed.js`、`src/assets.gen.js`、`assets/**/*.svg`（32 个） |
-| 不改的部分 | 上述文件**一行未改**，上游升级时整目录替换即可 |
+| 不改的部分 | 除下表的本地补丁外**一行未改**，上游升级时整目录替换后重新打补丁 |
 | 生成的文件 | `assets.text.js`（`scripts/gen-asset-text.mjs` 把 SVG 文本内联成 JS map，浏览器 bundle 不需要额外路由） |
+
+## 本地补丁（与上游的差异）
+
+| 文件 | 补丁 | 原因 |
+|---|---|---|
+| `embed.js` `placeAsset()` | `rot` 从内层 `<svg transform>` 改为外包一层 `<g transform>`（旋转中心不变） | 嵌套 `<svg>` 的 `transform` 是 SVG 2，**WebKitGTK 不支持**（Linux Tauri 客户端），旋钮数值在变但画面不转。`<g transform>` 所有引擎都支持。见 `docs/reports/2026-11-21-webkitgtk-knob.md` |
+
+补丁不影响导出字节：`ui.toml` 由 `uiToml()` 生成，`panelSvg()` 的变化只影响 SVG 标记（`<g>` 包裹不改变图元坐标）。
 
 ## 为什么 vendor 而不是运行时读上游
 

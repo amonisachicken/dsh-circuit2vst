@@ -1,5 +1,14 @@
 # 更新日志
 
+## 0.1.10 — 2026-11-21
+
+- **修复 Tauri（WebKitGTK）里旋钮转不动（外部反馈）**：`vendor/boxdesigner/embed.js` 的 `placeAsset()` 把 `rot` 写在
+  **嵌套 `<svg>` 的 `transform`** 上——那是 SVG 2，WebKitGTK 不渲染（数值在变、画面不动）。
+  改为外包一层 `<g transform="rotate(...)">`（旋转中心仍是外层的 mm 坐标），所有引擎通用；导出 PNG 与浏览器预览随之一致。
+- `vendor/boxdesigner/PROVENANCE.md` 记录该本地补丁（上游升级时重打）。
+- 新增单元用例：旋转的精灵必须是 `<g transform>` 包裹、内层 `<svg>` 不带 `transform`；0.5 位置不产生包裹。
+- 反馈原文归档 `docs/reports/2026-11-21-webkitgtk-knob.md`。
+
 ## 0.1.9 — 2026-11-20
 
 - **修复电路设计器命中判定与视觉层级相反（外部反馈 A）**：`circuitHitTest` 在距离相同时保留**先遍历到**（更早创建）的器件，
