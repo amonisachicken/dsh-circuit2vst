@@ -1666,6 +1666,49 @@ const CIRCUIT_SYMBOLS = {
       },
       "standard": "GB/T 4728.2"
     },
+    "inductor": {
+      "canvas": {
+        "h": 15,
+        "w": 30
+      },
+      "category": "passive",
+      "file": "assets/gb4728-ext/symbols/21-inductor.svg",
+      "models": [],
+      "name": {
+        "en": "Inductor",
+        "zh": "电感器"
+      },
+      "origin": {
+        "x": 15,
+        "y": 7.5
+      },
+      "pins": [
+        {
+          "at": {
+            "x": -12.5,
+            "y": 0
+          },
+          "dir": "left",
+          "id": "1"
+        },
+        {
+          "at": {
+            "x": 12.5,
+            "y": 0
+          },
+          "dir": "right",
+          "id": "2"
+        }
+      ],
+      "spice": {
+        "pinOrder": [
+          "1",
+          "2"
+        ],
+        "prefix": "L"
+      },
+      "standard": "GB/T 4728.4（线圈画法）"
+    },
     "jfet-n": {
       "canvas": {
         "h": 35,
@@ -2236,6 +2279,142 @@ const CIRCUIT_SYMBOLS = {
       },
       "standard": "GB/T 4728.2（示意画法）"
     },
+    "transformer": {
+      "canvas": {
+        "h": 40,
+        "w": 30
+      },
+      "category": "passive",
+      "file": "assets/gb4728-ext/symbols/22-transformer.svg",
+      "models": [],
+      "name": {
+        "en": "次级各带中心抽头）",
+        "zh": "变压器（双绕组，初"
+      },
+      "origin": {
+        "x": 15,
+        "y": 20
+      },
+      "pins": [
+        {
+          "at": {
+            "x": -5,
+            "y": -15
+          },
+          "dir": "up",
+          "id": "A1"
+        },
+        {
+          "at": {
+            "x": -12.5,
+            "y": 0
+          },
+          "dir": "left",
+          "id": "AT"
+        },
+        {
+          "at": {
+            "x": -5,
+            "y": 15
+          },
+          "dir": "down",
+          "id": "A2"
+        },
+        {
+          "at": {
+            "x": 5,
+            "y": -15
+          },
+          "dir": "up",
+          "id": "B1"
+        },
+        {
+          "at": {
+            "x": 12.5,
+            "y": 0
+          },
+          "dir": "right",
+          "id": "BT"
+        },
+        {
+          "at": {
+            "x": 5,
+            "y": 15
+          },
+          "dir": "down",
+          "id": "B2"
+        }
+      ],
+      "spice": {
+        "pinOrder": [
+          "A1",
+          "AT",
+          "A2",
+          "B1",
+          "BT",
+          "B2"
+        ],
+        "prefix": "T"
+      },
+      "standard": "GB/T 4728.6（示意画法）"
+    },
+    "triode": {
+      "canvas": {
+        "h": 35,
+        "w": 35
+      },
+      "category": "tube",
+      "file": "assets/gb4728-ext/symbols/23-triode.svg",
+      "models": [
+        "12AX7",
+        "12AT7",
+        "12AU7",
+        "12AY7"
+      ],
+      "name": {
+        "en": "Triode",
+        "zh": "三极管（热阴极电子管）"
+      },
+      "origin": {
+        "x": 17.5,
+        "y": 17.5
+      },
+      "pins": [
+        {
+          "at": {
+            "x": 0,
+            "y": -15
+          },
+          "dir": "up",
+          "id": "A"
+        },
+        {
+          "at": {
+            "x": -15,
+            "y": 0
+          },
+          "dir": "left",
+          "id": "G"
+        },
+        {
+          "at": {
+            "x": 0,
+            "y": 15
+          },
+          "dir": "down",
+          "id": "K"
+        }
+      ],
+      "spice": {
+        "pinOrder": [
+          "A",
+          "G",
+          "K"
+        ],
+        "prefix": "X"
+      },
+      "standard": "GB/T 4728.5（电子管）"
+    },
     "vcc": {
       "canvas": {
         "h": 22.5,
@@ -2369,6 +2548,30 @@ const CIRCUIT_ART = {
     "viewBox": "0 0 15 22.5",
     "inner": "<g transform=\"translate(7.5,15.0)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <line x1=\"0\" y1=\"-12.5\" x2=\"0\" y2=\"0\" />\n      <line x1=\"-5\" y1=\"0\" x2=\"5\" y2=\"0\" />\n      <line x1=\"-3\" y1=\"2\" x2=\"3\" y2=\"2\" />\n      <line x1=\"-1.5\" y1=\"4\" x2=\"1.5\" y2=\"4\" />\n    </g>",
     "texts": []
+  },
+  "inductor": {
+    "viewBox": "0 0 30 15",
+    "inner": "<g transform=\"translate(15,7.5)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <line x1=\"-12.5\" y1=\"0\" x2=\"-6\" y2=\"0\" />\n      <path d=\"M -6 0 C -6 -0.83 -5.33 -1.5 -4.5 -1.5 C -3.67 -1.5 -3 -0.83 -3 0 C -3 -0.83 -2.33 -1.5 -1.5 -1.5 C -0.67 -1.5 0 -0.83 0 0 C 0 -0.83 0.67 -1.5 1.5 -1.5 C 2.33 -1.5 3 -0.83 3 0 C 3 -0.83 3.67 -1.5 4.5 -1.5 C 5.33 -1.5 6 -0.83 6 0\" />\n      <line x1=\"6\" y1=\"0\" x2=\"12.5\" y2=\"0\" />\n      <g stroke=\"none\" fill=\"#64748b\" font-size=\"2.4\" font-family=\"Consolas, monospace\">\n        \n        \n      </g>\n    </g>",
+    "texts": [
+      {
+        "x": 3.4000000000000004,
+        "y": 6.1,
+        "size": 2.4,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "1"
+      },
+      {
+        "x": 26.6,
+        "y": 6.1,
+        "size": 2.4,
+        "anchor": "end",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "2"
+      }
+    ]
   },
   "jfet-n": {
     "viewBox": "0 0 25 35",
@@ -2608,6 +2811,99 @@ const CIRCUIT_ART = {
     "viewBox": "0 0 15 15",
     "inner": "<g transform=\"translate(7.5,7.5)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <line x1=\"-5\" y1=\"0\" x2=\"1.5\" y2=\"0\" />\n      <circle cx=\"3.8\" cy=\"0\" r=\"2.3\" />\n    </g>",
     "texts": []
+  },
+  "transformer": {
+    "viewBox": "0 0 30 40",
+    "inner": "<g transform=\"translate(15,20)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <!-- 铁芯 -->\n      <line x1=\"-0.8\" y1=\"-10.5\" x2=\"-0.8\" y2=\"10.5\" />\n      <line x1=\"0.8\" y1=\"-10.5\" x2=\"0.8\" y2=\"10.5\" />\n      <!-- 初级绕组（左，鼓包朝右） -->\n      <path d=\"M -5 -10 C -5 -9.30963 -4.30963 -9.44037 -3.75 -8.75 C -3.75 -8.05963 -5 -8.19037 -5 -7.5 C -5 -6.80963 -4.30963 -6.94037 -3.75 -6.25 C -3.75 -5.55963 -5 -5.69037 -5 -5 C -5 -4.30963 -4.30963 -4.44037 -3.75 -3.75 C -3.75 -3.05963 -5 -3.19037 -5 -2.5 C -5 -1.80963 -4.30963 -1.94037 -3.75 -1.25 C -3.75 -0.559625 -5 -0.690375 -5 0 C -5 0.690375 -4.30963 0.559625 -3.75 1.25 C -3.75 1.94037 -5 1.80963 -5 2.5 C -5 3.19037 -4.30963 3.05963 -3.75 3.75 C -3.75 4.44037 -5 4.30963 -5 5 C -5 5.69037 -4.30963 5.55963 -3.75 6.25 C -3.75 6.94037 -5 6.80963 -5 7.5 C -5 8.19037 -4.30963 8.05963 -3.75 8.75 C -3.75 9.44037 -5 9.30963 -5 10\" />\n      <!-- 次级绕组（右，鼓包朝左） -->\n      <path d=\"M 5 -10 C 5 -9.30963 4.30963 -9.44037 3.75 -8.75 C 3.75 -8.05963 5 -8.19037 5 -7.5 C 5 -6.80963 4.30963 -6.94037 3.75 -6.25 C 3.75 -5.55963 5 -5.69037 5 -5 C 5 -4.30963 4.30963 -4.44037 3.75 -3.75 C 3.75 -3.05963 5 -3.19037 5 -2.5 C 5 -1.80963 4.30963 -1.94037 3.75 -1.25 C 3.75 -0.559625 5 -0.690375 5 0 C 5 0.690375 4.30963 0.559625 3.75 1.25 C 3.75 1.94037 5 1.80963 5 2.5 C 5 3.19037 4.30963 3.05963 3.75 3.75 C 3.75 4.44037 5 4.30963 5 5 C 5 5.69037 4.30963 5.55963 3.75 6.25 C 3.75 6.94037 5 6.80963 5 7.5 C 5 8.19037 4.30963 8.05963 3.75 8.75 C 3.75 9.44037 5 9.30963 5 10\" />\n      <!-- 引线：上端 / 下端 / 中心抽头 -->\n      <line x1=\"-5\" y1=\"-10\" x2=\"-5\" y2=\"-15\" />\n      <line x1=\"-5\" y1=\"10\" x2=\"-5\" y2=\"15\" />\n      <line x1=\"-5\" y1=\"0\" x2=\"-12.5\" y2=\"0\" />\n      <line x1=\"5\" y1=\"-10\" x2=\"5\" y2=\"-15\" />\n      <line x1=\"5\" y1=\"10\" x2=\"5\" y2=\"15\" />\n      <line x1=\"5\" y1=\"0\" x2=\"12.5\" y2=\"0\" />\n      <!-- 同名端（打点端在上） -->\n      <circle cx=\"-5\" cy=\"-12.5\" r=\"0.6\" fill=\"#0f172a\" stroke=\"none\" />\n      <circle cx=\"5\" cy=\"-12.5\" r=\"0.6\" fill=\"#0f172a\" stroke=\"none\" />\n      <g stroke=\"none\" fill=\"#64748b\" font-size=\"2.2\" font-family=\"Consolas, monospace\">\n        \n        \n        \n        \n        \n        \n      </g>\n    </g>",
+    "texts": [
+      {
+        "x": 7.6,
+        "y": 8.6,
+        "size": 2.2,
+        "anchor": "end",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "A1"
+      },
+      {
+        "x": 2.5999999999999996,
+        "y": 18.8,
+        "size": 2.2,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "AT"
+      },
+      {
+        "x": 7.6,
+        "y": 34.2,
+        "size": 2.2,
+        "anchor": "end",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "A2"
+      },
+      {
+        "x": 22.4,
+        "y": 8.6,
+        "size": 2.2,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "B1"
+      },
+      {
+        "x": 27.4,
+        "y": 18.8,
+        "size": 2.2,
+        "anchor": "end",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "BT"
+      },
+      {
+        "x": 22.4,
+        "y": 34.2,
+        "size": 2.2,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "B2"
+      }
+    ]
+  },
+  "triode": {
+    "viewBox": "0 0 35 35",
+    "inner": "<g transform=\"translate(17.5,17.5)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <circle cx=\"0\" cy=\"0\" r=\"7\" />\n      <!-- 屏极（阳极）：上方横杠 + 引线 -->\n      <line x1=\"-5\" y1=\"-4.2\" x2=\"5\" y2=\"-4.2\" />\n      <line x1=\"0\" y1=\"-15\" x2=\"0\" y2=\"-4.2\" />\n      <!-- 栅极：四段短杠 + 左引线 -->\n      <line x1=\"-5\" y1=\"0\" x2=\"-2.6\" y2=\"0\" />\n      <line x1=\"-1.4\" y1=\"0\" x2=\"1.4\" y2=\"0\" />\n      <line x1=\"2.6\" y1=\"0\" x2=\"5\" y2=\"0\" />\n      <line x1=\"-15\" y1=\"0\" x2=\"-5\" y2=\"0\" />\n      <!-- 阴极：下方横杠 + 引线 -->\n      <line x1=\"-5\" y1=\"4.2\" x2=\"5\" y2=\"4.2\" />\n      <line x1=\"0\" y1=\"4.2\" x2=\"0\" y2=\"15\" />\n      <!-- 灯丝（示意，不引出引脚） -->\n      <path d=\"M -3.2 4.9 L 0 6.4 L 3.2 4.9\" stroke-width=\"0.35\" />\n      <g stroke=\"none\" fill=\"#64748b\" font-size=\"2.4\" font-family=\"Consolas, monospace\">\n        \n        \n        \n      </g>\n    </g>",
+    "texts": [
+      {
+        "x": 19.1,
+        "y": 6.300000000000001,
+        "size": 2.4,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "A"
+      },
+      {
+        "x": 4.9,
+        "y": 16.1,
+        "size": 2.4,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "G"
+      },
+      {
+        "x": 19.1,
+        "y": 30.9,
+        "size": 2.4,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "K"
+      }
+    ]
   },
   "vcc": {
     "viewBox": "0 0 15 22.5",
@@ -3512,6 +3808,20 @@ function panelValueOhms(value) {
 }
 
 /**
+ * Deterministic SPICE number text for derived values (transformer windings):
+ * up to 9 decimals, trailing zeros trimmed, scientific notation outside
+ * 1e-6 … 1e7 — the same rules as the upstream backend's `fmt_num`.
+ * @param value - numeric value.
+ * @returns SPICE text.
+ */
+function fmtNum(value) {
+  if (!Number.isFinite(value)) return '0'
+  if (value !== 0 && (Math.abs(value) < 1e-6 || Math.abs(value) >= 1e7)) return value.toExponential()
+  const text = value.toFixed(9).replace(/0+$/, '').replace(/\.$/, '')
+  return text === '' || text === '-0' ? '0' : text
+}
+
+/**
  * `1M` / `0.5m` style values: ends with `m` but is not `meg`/`mil`.
  * @param raw - panel value text.
  * @returns whether the value looks like a mega typo.
@@ -3773,6 +4083,78 @@ function generateNetlist(doc, table) {
     if (part.symbol === 'voltage-source') {
       const value = part.value ?? '9'
       lines.push(`${part.ref} ${nodes[0]} ${nodes[1]} DC ${value}`)
+      continue
+    }
+    // 电感：`L<ref> a b <value>`（DCR 请另画电阻 —— ngspice 的 L 没有 DCR 参数）
+    if (part.symbol === 'inductor' && nodes.length === 2) {
+      lines.push(`${part.ref} ${nodes[0]} ${nodes[1]} ${part.value ?? '10m'}`)
+      continue
+    }
+
+    // ---- 变压器：展开成 4 个绕组 + 6 条耦合（上游 docs/05 §5.1）----
+    //
+    // 6 脚 = 初级(上/抽头/下) + 次级(上/抽头/下)，抽头像电位器一样按比例分：
+    //   L_上段 = a²·L_total，L_下段 = (1−a)²·L_total（a 从**打点端**量起）
+    // 同一绕组的两个半段用 k=0.9999 耦合（k=1 会让电感矩阵奇异），初/次级之间用用户给的 k。
+    if (part.symbol === 'transformer' && nodes.length === 6) {
+      const rawL = part.value ?? '1'
+      const lp = panelValueOhms(rawL)
+      if (lp === null) {
+        lints.push({ level: 'error', code: 'inductor-value', msg: `${part.ref}：读不出初级电感 \`${rawL}\`（单位 H，可写 \`1\`/\`500m\`）` })
+        continue
+      }
+      const ratio = part.ratio ?? 2
+      const k = part.k ?? 0.999
+      const tapP = part.tap_p ?? 0.5
+      const tapS = part.tap_s ?? 0.5
+      let bad = false
+      if (!(lp > 0 && Number.isFinite(lp))) {
+        lints.push({ level: 'error', code: 'transformer-l', msg: `${part.ref}：初级电感必须 > 0（收到 \`${rawL}\`）` })
+        bad = true
+      }
+      if (!(ratio > 0 && Number.isFinite(ratio))) {
+        lints.push({ level: 'error', code: 'transformer-ratio', msg: `${part.ref}：匝比必须 > 0（收到 ${ratio}）` })
+        bad = true
+      }
+      if (!(k > 0 && k < 1)) {
+        lints.push({ level: 'error', code: 'transformer-k', msg: `${part.ref}：耦合系数必须 0 < k < 1（收到 ${k}）；紧耦合请拆励磁电感 + 漏感` })
+        bad = true
+      }
+      for (const [what, a] of [['初级', tapP], ['次级', tapS]]) {
+        if (!(a > 0 && a < 1)) {
+          lints.push({
+            level: 'error',
+            code: 'transformer-tap',
+            msg: `${part.ref}：${what}抽头位置必须 0 < a < 1（收到 ${a}）—— 贴到端点会得到 0 H 的绕组`,
+          })
+          bad = true
+        }
+      }
+      if (bad) continue
+      const ls = lp / (ratio * ratio)
+      const lpa = lp * tapP * tapP
+      const lpb = lp * (1 - tapP) * (1 - tapP)
+      const lsa = ls * tapS * tapS
+      const lsb = ls * (1 - tapS) * (1 - tapS)
+      const [a, at, b, c, ct, d] = nodes
+      const n = part.ref // T1 → LT1A / KT1A
+      lines.push(`* 变压器 ${n}：初级 ${rawL}·${(tapP * 100).toFixed(0)}%，次级 ${fmtNum(ls)}·${(tapS * 100).toFixed(0)}%，匝比 ${ratio}:1，k=${k}`)
+      lines.push(`L${n}A ${a} ${at} ${fmtNum(lpa)}`)
+      lines.push(`L${n}B ${at} ${b} ${fmtNum(lpb)}`)
+      lines.push(`L${n}C ${c} ${ct} ${fmtNum(lsa)}`)
+      lines.push(`L${n}D ${ct} ${d} ${fmtNum(lsb)}`)
+      // 6 条耦合：同绕组半段 0.9999，跨绕组用用户 k
+      const pairs = [
+        ['A', 'B', 0.9999],
+        ['C', 'D', 0.9999],
+        ['A', 'C', k],
+        ['A', 'D', k],
+        ['B', 'C', k],
+        ['B', 'D', k],
+      ]
+      pairs.forEach(([x, y, kk], index) => {
+        lines.push(`K${n}${String.fromCharCode(65 + index)} L${n}${x} L${n}${y} ${kk}`)
+      })
       continue
     }
     const prefix = symbol.spice?.prefix ?? ''
@@ -4432,10 +4814,27 @@ const CIRCUIT_VALUE_UNITS = {
   capacitor: ['n', 'p', 'u'],
   potentiometer: ['k', 'Ω'],
   'voltage-source': ['V'],
+  inductor: ['m', 'u', ''],
+  transformer: ['m', 'u', ''],
 }
 
-/** Display names for unit suffixes. */
+/** Display names for unit suffixes (resistance / capacitance / voltage). */
 const CIRCUIT_UNIT_LABEL = { '': 'Ω', k: 'kΩ', p: 'pF', n: 'nF', u: 'µF', V: 'V' }
+
+/** Units whose letters mean henries instead of the default table. */
+const CIRCUIT_UNIT_LABEL_HENRY = { '': 'H', m: 'mH', u: 'µH' }
+const CIRCUIT_HENRY_SYMBOLS = new Set(['inductor', 'transformer'])
+
+/**
+ * Display text for one unit suffix, per symbol (inductor/transformer show H).
+ * @param symbol - symbol id.
+ * @param unit - unit suffix.
+ * @returns display text.
+ */
+function circuitUnitLabel(symbol, unit) {
+  if (CIRCUIT_HENRY_SYMBOLS.has(symbol)) return CIRCUIT_UNIT_LABEL_HENRY[unit] ?? unit
+  return CIRCUIT_UNIT_LABEL[unit] ?? unit
+}
 
 /** Same-point test used by the junction finder. */
 function circuitSamePoint(left, right) {
@@ -4617,6 +5016,8 @@ const CIRCUIT_PART_DEFAULTS = {
   resistor: { value: '10k' },
   capacitor: { value: '100n' },
   potentiometer: { value: '500k' },
+  inductor: { value: '10m' },
+  transformer: { value: '1' },
   diode: { model: '1N4148' },
   led: { model: 'LedRed' },
   npn: { model: 'BC549C' },
@@ -5318,6 +5719,7 @@ function CircuitCanvas({ project, api, t, onError }) {
         case 'r': circuitEnterPlace('resistor', editor, cursorMmRef.current); return
         case 'c': circuitEnterPlace('capacitor', editor, cursorMmRef.current); return
         case 'g': circuitEnterPlace('earth', editor, cursorMmRef.current); return
+        case 'l': circuitEnterPlace('inductor', editor, cursorMmRef.current); return
         case 'h': event.preventDefault(); setHelpOpen((open) => !open); return
         case 'w': setMode({ kind: 'wire', from: null }); editor.status('画线：点击起点（只走上下左右），esc 退出'); return
         case 'q': setMode({ kind: 'delete' }); editor.status('删除：点元件删元件；点导线只删该段'); return
@@ -5915,8 +6317,49 @@ function CircuitCanvas({ project, api, t, onError }) {
                     const current = circuitSplitValue(part.value, CIRCUIT_VALUE_UNITS[part.symbol])
                     part.value = circuitJoinValue(current.num, event.target.value)
                   }),
-                }, CIRCUIT_VALUE_UNITS[selectedPart.symbol].map((unit) => node('option', { key: unit, value: unit }, CIRCUIT_UNIT_LABEL[unit] ?? unit)))),
+                }, CIRCUIT_VALUE_UNITS[selectedPart.symbol].map((unit) => node('option', { key: unit, value: unit }, circuitUnitLabel(selectedPart.symbol, unit))))),
             ),
+            selectedPart.symbol === 'transformer' ? node('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' } },
+              node('label', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+                node('span', { style: style.label }, t('circuit.field.ratio')),
+                node('input', {
+                  style: style.input, type: 'number', step: '0.1', min: '0.1',
+                  value: String(selectedPart.ratio ?? 2),
+                  onChange: (event) => updatePart(selectedPart.id, (part) => {
+                    const next = Number(event.target.value)
+                    if (Number.isFinite(next) && next > 0) part.ratio = next
+                  }),
+                })),
+              node('label', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+                node('span', { style: style.label }, t('circuit.field.k')),
+                node('input', {
+                  style: style.input, type: 'number', step: '0.001', min: '0.001', max: '0.999',
+                  value: String(selectedPart.k ?? 0.999),
+                  onChange: (event) => updatePart(selectedPart.id, (part) => {
+                    const next = Number(event.target.value)
+                    if (Number.isFinite(next) && next > 0 && next < 1) part.k = next
+                  }),
+                })),
+              node('label', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+                node('span', { style: style.label }, t('circuit.field.tapP')),
+                node('input', {
+                  style: style.input, type: 'number', step: '1', min: '5', max: '95',
+                  value: String(Math.round((selectedPart.tap_p ?? 0.5) * 100)),
+                  onChange: (event) => updatePart(selectedPart.id, (part) => {
+                    const next = Number(event.target.value) / 100
+                    if (Number.isFinite(next) && next > 0 && next < 1) part.tap_p = next
+                  }),
+                })),
+              node('label', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+                node('span', { style: style.label }, t('circuit.field.tapS')),
+                node('input', {
+                  style: style.input, type: 'number', step: '1', min: '5', max: '95',
+                  value: String(Math.round((selectedPart.tap_s ?? 0.5) * 100)),
+                  onChange: (event) => updatePart(selectedPart.id, (part) => {
+                    const next = Number(event.target.value) / 100
+                    if (Number.isFinite(next) && next > 0 && next < 1) part.tap_s = next
+                  }),
+                }))) : null,
             node('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' } },
               node('span', { style: { ...style.label, flex: 1 } }, t('circuit.field.rot')),
               [0, 90, 180, 270].map((rotation) => node('button', {
@@ -7539,6 +7982,10 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
       'circuit.wire': 'Wire',
       'circuit.field.alias': 'Alias',
       'circuit.field.model': 'Model',
+      'circuit.field.ratio': 'Turns ratio',
+      'circuit.field.k': 'Coupling k',
+      'circuit.field.tapP': 'Primary tap %',
+      'circuit.field.tapS': 'Secondary tap %',
       'circuit.field.model.none': 'Select a model…',
       'circuit.field.value': 'Value',
       'circuit.field.unit': 'Unit',
@@ -7668,6 +8115,10 @@ function PanelDesigner({ project, callApi, t, onError, showToast }) {
       'circuit.wire': '导线',
       'circuit.field.alias': '别名',
       'circuit.field.model': '型号',
+      'circuit.field.ratio': '匝比',
+      'circuit.field.k': '耦合 k',
+      'circuit.field.tapP': '初级抽头 %',
+      'circuit.field.tapS': '次级抽头 %',
       'circuit.field.model.none': '选择型号…',
       'circuit.field.value': '数值',
       'circuit.field.unit': '单位',

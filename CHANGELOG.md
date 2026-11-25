@@ -1,5 +1,20 @@
 # 更新日志
 
+## 0.2.0 — 2026-11-25
+
+- **合入上游大更新：电感 / 变压器 / 电子三极管**
+  - 设计器符号同步到 `rustomp-circuit-designer v0.2.1`（21 个符号，新增 `inductor` / `transformer` / `triode` 与 3 个 SVG）；
+  - 网表引擎按上游规则移植：
+    - 电感 `L<ref> a b <value>`（缺省 `10m`）；
+    - 变压器展开成 4 个绕组（`a²` / `(1−a)²` 抽头分割）+ 6 条耦合（同绕组 0.9999、跨绕组 k），
+      越界参数（L≤0 / 匝比≤0 / k∉(0,1) / 抽头∉(0,1)）报 `transformer-*` error；
+    - 三极管 `X1 A G K 12AX7`（5 列子电路实例），型号闭集 12AX7/12AT7/12AU7/12AY7；
+  - 仿真模型库 `models.lib` 补上 Koren `TRIODE` 本体与 4 个型号 wrapper（参数与框架逐项一致）；
+  - 属性面板：电感/变压器用 H 单位（H / mH / µH）、变压器可调匝比/耦合/抽头；`l` 键放置电感；
+- **钉到 rustomp v0.1.5**（框架），mac 打包器仍 `v0.1.8`；
+- 测试：新增 6 个器件用例（电感、变压器展开/抽头/越界、三极管实例/缺型号），`npm test` **54/54**；
+- 端到端：12AX7 共阴级（`/tmp/tube-proj`）在 ngspice 下通过构建前对拍（OUT RMS 169 V）。
+
 ## 0.1.10 — 2026-11-21
 
 - **修复 Tauri（WebKitGTK）里旋钮转不动（外部反馈）**：`vendor/boxdesigner/embed.js` 的 `placeAsset()` 把 `rot` 写在

@@ -25,10 +25,27 @@ const CIRCUIT_VALUE_UNITS = {
   capacitor: ['n', 'p', 'u'],
   potentiometer: ['k', 'Ω'],
   'voltage-source': ['V'],
+  inductor: ['m', 'u', ''],
+  transformer: ['m', 'u', ''],
 }
 
-/** Display names for unit suffixes. */
+/** Display names for unit suffixes (resistance / capacitance / voltage). */
 const CIRCUIT_UNIT_LABEL = { '': 'Ω', k: 'kΩ', p: 'pF', n: 'nF', u: 'µF', V: 'V' }
+
+/** Units whose letters mean henries instead of the default table. */
+const CIRCUIT_UNIT_LABEL_HENRY = { '': 'H', m: 'mH', u: 'µH' }
+const CIRCUIT_HENRY_SYMBOLS = new Set(['inductor', 'transformer'])
+
+/**
+ * Display text for one unit suffix, per symbol (inductor/transformer show H).
+ * @param symbol - symbol id.
+ * @param unit - unit suffix.
+ * @returns display text.
+ */
+function circuitUnitLabel(symbol, unit) {
+  if (CIRCUIT_HENRY_SYMBOLS.has(symbol)) return CIRCUIT_UNIT_LABEL_HENRY[unit] ?? unit
+  return CIRCUIT_UNIT_LABEL[unit] ?? unit
+}
 
 /** Same-point test used by the junction finder. */
 function circuitSamePoint(left, right) {
@@ -210,6 +227,8 @@ const CIRCUIT_PART_DEFAULTS = {
   resistor: { value: '10k' },
   capacitor: { value: '100n' },
   potentiometer: { value: '500k' },
+  inductor: { value: '10m' },
+  transformer: { value: '1' },
   diode: { model: '1N4148' },
   led: { model: 'LedRed' },
   npn: { model: 'BC549C' },
@@ -911,6 +930,7 @@ function CircuitCanvas({ project, api, t, onError }) {
         case 'r': circuitEnterPlace('resistor', editor, cursorMmRef.current); return
         case 'c': circuitEnterPlace('capacitor', editor, cursorMmRef.current); return
         case 'g': circuitEnterPlace('earth', editor, cursorMmRef.current); return
+        case 'l': circuitEnterPlace('inductor', editor, cursorMmRef.current); return
         case 'h': event.preventDefault(); setHelpOpen((open) => !open); return
         case 'w': setMode({ kind: 'wire', from: null }); editor.status('画线：点击起点（只走上下左右），esc 退出'); return
         case 'q': setMode({ kind: 'delete' }); editor.status('删除：点元件删元件；点导线只删该段'); return
@@ -1508,8 +1528,49 @@ function CircuitCanvas({ project, api, t, onError }) {
                     const current = circuitSplitValue(part.value, CIRCUIT_VALUE_UNITS[part.symbol])
                     part.value = circuitJoinValue(current.num, event.target.value)
                   }),
-                }, CIRCUIT_VALUE_UNITS[selectedPart.symbol].map((unit) => node('option', { key: unit, value: unit }, CIRCUIT_UNIT_LABEL[unit] ?? unit)))),
+                }, CIRCUIT_VALUE_UNITS[selectedPart.symbol].map((unit) => node('option', { key: unit, value: unit }, circuitUnitLabel(selectedPart.symbol, unit))))),
             ),
+            selectedPart.symbol === 'transformer' ? node('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' } },
+              node('label', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+                node('span', { style: style.label }, t('circuit.field.ratio')),
+                node('input', {
+                  style: style.input, type: 'number', step: '0.1', min: '0.1',
+                  value: String(selectedPart.ratio ?? 2),
+                  onChange: (event) => updatePart(selectedPart.id, (part) => {
+                    const next = Number(event.target.value)
+                    if (Number.isFinite(next) && next > 0) part.ratio = next
+                  }),
+                })),
+              node('label', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+                node('span', { style: style.label }, t('circuit.field.k')),
+                node('input', {
+                  style: style.input, type: 'number', step: '0.001', min: '0.001', max: '0.999',
+                  value: String(selectedPart.k ?? 0.999),
+                  onChange: (event) => updatePart(selectedPart.id, (part) => {
+                    const next = Number(event.target.value)
+                    if (Number.isFinite(next) && next > 0 && next < 1) part.k = next
+                  }),
+                })),
+              node('label', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+                node('span', { style: style.label }, t('circuit.field.tapP')),
+                node('input', {
+                  style: style.input, type: 'number', step: '1', min: '5', max: '95',
+                  value: String(Math.round((selectedPart.tap_p ?? 0.5) * 100)),
+                  onChange: (event) => updatePart(selectedPart.id, (part) => {
+                    const next = Number(event.target.value) / 100
+                    if (Number.isFinite(next) && next > 0 && next < 1) part.tap_p = next
+                  }),
+                })),
+              node('label', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+                node('span', { style: style.label }, t('circuit.field.tapS')),
+                node('input', {
+                  style: style.input, type: 'number', step: '1', min: '5', max: '95',
+                  value: String(Math.round((selectedPart.tap_s ?? 0.5) * 100)),
+                  onChange: (event) => updatePart(selectedPart.id, (part) => {
+                    const next = Number(event.target.value) / 100
+                    if (Number.isFinite(next) && next > 0 && next < 1) part.tap_s = next
+                  }),
+                }))) : null,
             node('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' } },
               node('span', { style: { ...style.label, flex: 1 } }, t('circuit.field.rot')),
               [0, 90, 180, 270].map((rotation) => node('button', {

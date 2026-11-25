@@ -207,6 +207,20 @@ export function panelValueOhms(value) {
 }
 
 /**
+ * Deterministic SPICE number text for derived values (transformer windings):
+ * up to 9 decimals, trailing zeros trimmed, scientific notation outside
+ * 1e-6 … 1e7 — the same rules as the upstream backend's `fmt_num`.
+ * @param value - numeric value.
+ * @returns SPICE text.
+ */
+export function fmtNum(value) {
+  if (!Number.isFinite(value)) return '0'
+  if (value !== 0 && (Math.abs(value) < 1e-6 || Math.abs(value) >= 1e7)) return value.toExponential()
+  const text = value.toFixed(9).replace(/0+$/, '').replace(/\.$/, '')
+  return text === '' || text === '-0' ? '0' : text
+}
+
+/**
  * `1M` / `0.5m` style values: ends with `m` but is not `meg`/`mil`.
  * @param raw - panel value text.
  * @returns whether the value looks like a mega typo.
@@ -468,6 +482,78 @@ export function generateNetlist(doc, table) {
     if (part.symbol === 'voltage-source') {
       const value = part.value ?? '9'
       lines.push(`${part.ref} ${nodes[0]} ${nodes[1]} DC ${value}`)
+      continue
+    }
+    // 电感：`L<ref> a b <value>`（DCR 请另画电阻 —— ngspice 的 L 没有 DCR 参数）
+    if (part.symbol === 'inductor' && nodes.length === 2) {
+      lines.push(`${part.ref} ${nodes[0]} ${nodes[1]} ${part.value ?? '10m'}`)
+      continue
+    }
+
+    // ---- 变压器：展开成 4 个绕组 + 6 条耦合（上游 docs/05 §5.1）----
+    //
+    // 6 脚 = 初级(上/抽头/下) + 次级(上/抽头/下)，抽头像电位器一样按比例分：
+    //   L_上段 = a²·L_total，L_下段 = (1−a)²·L_total（a 从**打点端**量起）
+    // 同一绕组的两个半段用 k=0.9999 耦合（k=1 会让电感矩阵奇异），初/次级之间用用户给的 k。
+    if (part.symbol === 'transformer' && nodes.length === 6) {
+      const rawL = part.value ?? '1'
+      const lp = panelValueOhms(rawL)
+      if (lp === null) {
+        lints.push({ level: 'error', code: 'inductor-value', msg: `${part.ref}：读不出初级电感 \`${rawL}\`（单位 H，可写 \`1\`/\`500m\`）` })
+        continue
+      }
+      const ratio = part.ratio ?? 2
+      const k = part.k ?? 0.999
+      const tapP = part.tap_p ?? 0.5
+      const tapS = part.tap_s ?? 0.5
+      let bad = false
+      if (!(lp > 0 && Number.isFinite(lp))) {
+        lints.push({ level: 'error', code: 'transformer-l', msg: `${part.ref}：初级电感必须 > 0（收到 \`${rawL}\`）` })
+        bad = true
+      }
+      if (!(ratio > 0 && Number.isFinite(ratio))) {
+        lints.push({ level: 'error', code: 'transformer-ratio', msg: `${part.ref}：匝比必须 > 0（收到 ${ratio}）` })
+        bad = true
+      }
+      if (!(k > 0 && k < 1)) {
+        lints.push({ level: 'error', code: 'transformer-k', msg: `${part.ref}：耦合系数必须 0 < k < 1（收到 ${k}）；紧耦合请拆励磁电感 + 漏感` })
+        bad = true
+      }
+      for (const [what, a] of [['初级', tapP], ['次级', tapS]]) {
+        if (!(a > 0 && a < 1)) {
+          lints.push({
+            level: 'error',
+            code: 'transformer-tap',
+            msg: `${part.ref}：${what}抽头位置必须 0 < a < 1（收到 ${a}）—— 贴到端点会得到 0 H 的绕组`,
+          })
+          bad = true
+        }
+      }
+      if (bad) continue
+      const ls = lp / (ratio * ratio)
+      const lpa = lp * tapP * tapP
+      const lpb = lp * (1 - tapP) * (1 - tapP)
+      const lsa = ls * tapS * tapS
+      const lsb = ls * (1 - tapS) * (1 - tapS)
+      const [a, at, b, c, ct, d] = nodes
+      const n = part.ref // T1 → LT1A / KT1A
+      lines.push(`* 变压器 ${n}：初级 ${rawL}·${(tapP * 100).toFixed(0)}%，次级 ${fmtNum(ls)}·${(tapS * 100).toFixed(0)}%，匝比 ${ratio}:1，k=${k}`)
+      lines.push(`L${n}A ${a} ${at} ${fmtNum(lpa)}`)
+      lines.push(`L${n}B ${at} ${b} ${fmtNum(lpb)}`)
+      lines.push(`L${n}C ${c} ${ct} ${fmtNum(lsa)}`)
+      lines.push(`L${n}D ${ct} ${d} ${fmtNum(lsb)}`)
+      // 6 条耦合：同绕组半段 0.9999，跨绕组用用户 k
+      const pairs = [
+        ['A', 'B', 0.9999],
+        ['C', 'D', 0.9999],
+        ['A', 'C', k],
+        ['A', 'D', k],
+        ['B', 'C', k],
+        ['B', 'D', k],
+      ]
+      pairs.forEach(([x, y, kk], index) => {
+        lines.push(`K${n}${String.fromCharCode(65 + index)} L${n}${x} L${n}${y} ${kk}`)
+      })
       continue
     }
     const prefix = symbol.spice?.prefix ?? ''

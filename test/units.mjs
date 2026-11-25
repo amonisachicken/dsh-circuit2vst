@@ -256,3 +256,85 @@ test('rotated sprites use a wrapping <g>, not a nested-svg transform (WebKitGTK)
   const centred = panelSvg(doc, assets, { controls: true, values: { [knob.id]: 0.5 } })
   assert.doesNotMatch(centred, /<g transform="rotate\(/, '0.5 时不需要旋转包裹')
 })
+
+/** Minimal two-terminal design around one part. */
+function around(part, extra = []) {
+  return {
+    name: 'dev',
+    parts: [
+      part,
+      { id: 'g1', ref: 'GND1', symbol: 'earth', at: { x: -12.5, y: 12.5 }, rot: 0, mirror: 'none' },
+      { id: 'i1', ref: 'IN1', symbol: 'node-in', at: { x: 12.5, y: 0 }, rot: 0, mirror: 'none' },
+      ...extra,
+    ],
+    wires: [],
+  }
+}
+
+test('an inductor emits L<ref> a b <value> (default 10m)', () => {
+  const part = { id: 'p1', ref: 'L1', symbol: 'inductor', at: { x: 0, y: 0 }, rot: 0, mirror: 'none', value: '10m' }
+  const generated = generateNetlist(around(part), SYMBOLS)
+  const line = generated.cir.split('\n').find((entry) => entry.startsWith('L1 '))
+  assert.ok(line, generated.cir)
+  assert.ok(line.endsWith('10m'), line)
+  assert.equal(line.split(/\s+/).length, 4, line)
+})
+
+test('a transformer expands into four windings and six couplings', () => {
+  const part = {
+    id: 'p1', ref: 'T1', symbol: 'transformer', at: { x: 0, y: 0 }, rot: 0, mirror: 'none',
+    value: '1', ratio: 2,
+  }
+  const out = { id: 'o1', ref: 'OUT1', symbol: 'node-out', at: { x: 20, y: 0 }, rot: 0, mirror: 'none' }
+  const generated = generateNetlist(around(part, [out]), SYMBOLS)
+  const windings = generated.cir.split('\n').filter((line) => line.startsWith('LT1'))
+  const couplings = generated.cir.split('\n').filter((line) => line.startsWith('KT1'))
+  assert.equal(windings.length, 4, generated.cir)
+  assert.equal(couplings.length, 6, generated.cir)
+  assert.ok(generated.cir.includes('0.25'), generated.cir)
+  assert.ok(generated.cir.includes('0.0625'), generated.cir)
+  assert.equal(couplings.filter((line) => line.endsWith('0.9999')).length, 2)
+  assert.equal(couplings.filter((line) => line.endsWith('0.999')).length, 4)
+})
+
+test('transformer taps scale the winding split', () => {
+  const part = {
+    id: 'p1', ref: 'T1', symbol: 'transformer', at: { x: 0, y: 0 }, rot: 0, mirror: 'none',
+    value: '1', ratio: 1, tap_p: 0.3, tap_s: 0.7,
+  }
+  const generated = generateNetlist(around(part), SYMBOLS)
+  const windings = generated.cir.split('\n').filter((line) => line.startsWith('LT1'))
+  assert.ok(windings[0].endsWith('0.09'), windings[0])
+  assert.ok(windings[1].endsWith('0.49'), windings[1])
+  assert.ok(windings[2].endsWith('0.49'), windings[2])
+  assert.ok(windings[3].endsWith('0.09'), windings[3])
+})
+
+test('out-of-range transformer parameters are errors', () => {
+  for (const [ratio, k, tap] of [[2, 1, 0.5], [2, 0.999, 1], [0, 0.999, 0.5]]) {
+    const part = {
+      id: 'p1', ref: 'T1', symbol: 'transformer', at: { x: 0, y: 0 }, rot: 0, mirror: 'none',
+      value: '1', ratio, k, tap_p: tap,
+    }
+    const generated = generateNetlist(around(part), SYMBOLS)
+    const errors = generated.lints.filter((lint) => lint.level === 'error')
+    assert.ok(errors.length > 0, JSON.stringify({ ratio, k, tap, lints: generated.lints }))
+  }
+})
+
+test('a triode emits a five-column subcircuit instance', () => {
+  const part = { id: 'p1', ref: 'X1', symbol: 'triode', at: { x: 0, y: 0 }, rot: 0, mirror: 'none', model: '12AX7' }
+  const generated = generateNetlist(around(part), SYMBOLS)
+  const line = generated.cir.split('\n').find((entry) => entry.startsWith('X1 '))
+  assert.ok(line, generated.cir)
+  const columns = line.split(/\s+/)
+  assert.equal(columns.length, 5, line)
+  assert.equal(columns[4], '12AX7')
+  assert.deepEqual(generated.lints.filter((lint) => lint.level === 'error'), [])
+})
+
+test('a triode without a model is an error', () => {
+  const part = { id: 'p1', ref: 'X1', symbol: 'triode', at: { x: 0, y: 0 }, rot: 0, mirror: 'none' }
+  const generated = generateNetlist(around(part), SYMBOLS)
+  assert.ok(generated.lints.some((lint) => lint.code === 'model-missing'))
+})

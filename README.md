@@ -107,6 +107,7 @@ circuit2vst pack my-fuzz                    # 产出安装包（ARTIFACT: …）
 ![电路设计器](docs/circuit.png)
 
 - 符号库/示例库（低通、二极管削波、共射、同相放大…）、2.5 mm 栅格吸附；
+- 器件：电阻/电容/电位器/二极管/LED/BJT/JFET/MOSFET/运放，以及 **电感（L）**、**变压器（双绕组带抽头，展开成 4 绕组 + 6 耦合）**、**电子三极管（12AX7/12AT7/12AU7/12AY7）**；
 - 元件属性：参考编号、别名、**型号闭集下拉**（二极管/三极管/JFET/MOSFET/运放/LED，与 rustomp 器件闭集一致）、数值+单位、旋转；
 - 实时网表卡片：lint（悬空、未知型号、端口、地）与**隐式连接审计**（见下）；
 - 仿真：瞬态/AC、FFT 频谱、THD；**IN 兼作波形发生器**（幅值/频率写回 IN 元件），**双击 OUT / 测试点打开示波器**；
@@ -137,7 +138,7 @@ ngspice 缺失时（例如 Windows 打包机）该步骤标记为 `skipped`；**
 |---|---|
 | DeepSeek Harness | 任意支持插件 bundle 的版本 |
 | Node.js | ≥ 20（测试与 `build:client`） |
-| rustomp 框架 | `v0.1.3`（`prepare` 自动克隆） |
+| rustomp 框架 | `v0.1.5`（`prepare` 自动克隆） |
 | 平台 packer | macOS `v0.1.8` / Windows `v0.3.0` / Linux `v0.1.0`（`prepare` 自动克隆） |
 | Rust | 打包平台需要对应工具链（macOS：Xcode CLT；Windows：MSVC BuildTools；Linux：gcc + cmake） |
 | ngspice | 可选，但构建前对拍需要（macOS `brew install ngspice`，Windows/Linux 装官方包） |

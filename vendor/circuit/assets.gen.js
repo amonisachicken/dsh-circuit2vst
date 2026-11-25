@@ -130,6 +130,49 @@ export const CIRCUIT_SYMBOLS = {
       },
       "standard": "GB/T 4728.2"
     },
+    "inductor": {
+      "canvas": {
+        "h": 15,
+        "w": 30
+      },
+      "category": "passive",
+      "file": "assets/gb4728-ext/symbols/21-inductor.svg",
+      "models": [],
+      "name": {
+        "en": "Inductor",
+        "zh": "电感器"
+      },
+      "origin": {
+        "x": 15,
+        "y": 7.5
+      },
+      "pins": [
+        {
+          "at": {
+            "x": -12.5,
+            "y": 0
+          },
+          "dir": "left",
+          "id": "1"
+        },
+        {
+          "at": {
+            "x": 12.5,
+            "y": 0
+          },
+          "dir": "right",
+          "id": "2"
+        }
+      ],
+      "spice": {
+        "pinOrder": [
+          "1",
+          "2"
+        ],
+        "prefix": "L"
+      },
+      "standard": "GB/T 4728.4（线圈画法）"
+    },
     "jfet-n": {
       "canvas": {
         "h": 35,
@@ -700,6 +743,142 @@ export const CIRCUIT_SYMBOLS = {
       },
       "standard": "GB/T 4728.2（示意画法）"
     },
+    "transformer": {
+      "canvas": {
+        "h": 40,
+        "w": 30
+      },
+      "category": "passive",
+      "file": "assets/gb4728-ext/symbols/22-transformer.svg",
+      "models": [],
+      "name": {
+        "en": "次级各带中心抽头）",
+        "zh": "变压器（双绕组，初"
+      },
+      "origin": {
+        "x": 15,
+        "y": 20
+      },
+      "pins": [
+        {
+          "at": {
+            "x": -5,
+            "y": -15
+          },
+          "dir": "up",
+          "id": "A1"
+        },
+        {
+          "at": {
+            "x": -12.5,
+            "y": 0
+          },
+          "dir": "left",
+          "id": "AT"
+        },
+        {
+          "at": {
+            "x": -5,
+            "y": 15
+          },
+          "dir": "down",
+          "id": "A2"
+        },
+        {
+          "at": {
+            "x": 5,
+            "y": -15
+          },
+          "dir": "up",
+          "id": "B1"
+        },
+        {
+          "at": {
+            "x": 12.5,
+            "y": 0
+          },
+          "dir": "right",
+          "id": "BT"
+        },
+        {
+          "at": {
+            "x": 5,
+            "y": 15
+          },
+          "dir": "down",
+          "id": "B2"
+        }
+      ],
+      "spice": {
+        "pinOrder": [
+          "A1",
+          "AT",
+          "A2",
+          "B1",
+          "BT",
+          "B2"
+        ],
+        "prefix": "T"
+      },
+      "standard": "GB/T 4728.6（示意画法）"
+    },
+    "triode": {
+      "canvas": {
+        "h": 35,
+        "w": 35
+      },
+      "category": "tube",
+      "file": "assets/gb4728-ext/symbols/23-triode.svg",
+      "models": [
+        "12AX7",
+        "12AT7",
+        "12AU7",
+        "12AY7"
+      ],
+      "name": {
+        "en": "Triode",
+        "zh": "三极管（热阴极电子管）"
+      },
+      "origin": {
+        "x": 17.5,
+        "y": 17.5
+      },
+      "pins": [
+        {
+          "at": {
+            "x": 0,
+            "y": -15
+          },
+          "dir": "up",
+          "id": "A"
+        },
+        {
+          "at": {
+            "x": -15,
+            "y": 0
+          },
+          "dir": "left",
+          "id": "G"
+        },
+        {
+          "at": {
+            "x": 0,
+            "y": 15
+          },
+          "dir": "down",
+          "id": "K"
+        }
+      ],
+      "spice": {
+        "pinOrder": [
+          "A",
+          "G",
+          "K"
+        ],
+        "prefix": "X"
+      },
+      "standard": "GB/T 4728.5（电子管）"
+    },
     "vcc": {
       "canvas": {
         "h": 22.5,
@@ -833,6 +1012,30 @@ export const CIRCUIT_ART = {
     "viewBox": "0 0 15 22.5",
     "inner": "<g transform=\"translate(7.5,15.0)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <line x1=\"0\" y1=\"-12.5\" x2=\"0\" y2=\"0\" />\n      <line x1=\"-5\" y1=\"0\" x2=\"5\" y2=\"0\" />\n      <line x1=\"-3\" y1=\"2\" x2=\"3\" y2=\"2\" />\n      <line x1=\"-1.5\" y1=\"4\" x2=\"1.5\" y2=\"4\" />\n    </g>",
     "texts": []
+  },
+  "inductor": {
+    "viewBox": "0 0 30 15",
+    "inner": "<g transform=\"translate(15,7.5)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <line x1=\"-12.5\" y1=\"0\" x2=\"-6\" y2=\"0\" />\n      <path d=\"M -6 0 C -6 -0.83 -5.33 -1.5 -4.5 -1.5 C -3.67 -1.5 -3 -0.83 -3 0 C -3 -0.83 -2.33 -1.5 -1.5 -1.5 C -0.67 -1.5 0 -0.83 0 0 C 0 -0.83 0.67 -1.5 1.5 -1.5 C 2.33 -1.5 3 -0.83 3 0 C 3 -0.83 3.67 -1.5 4.5 -1.5 C 5.33 -1.5 6 -0.83 6 0\" />\n      <line x1=\"6\" y1=\"0\" x2=\"12.5\" y2=\"0\" />\n      <g stroke=\"none\" fill=\"#64748b\" font-size=\"2.4\" font-family=\"Consolas, monospace\">\n        \n        \n      </g>\n    </g>",
+    "texts": [
+      {
+        "x": 3.4000000000000004,
+        "y": 6.1,
+        "size": 2.4,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "1"
+      },
+      {
+        "x": 26.6,
+        "y": 6.1,
+        "size": 2.4,
+        "anchor": "end",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "2"
+      }
+    ]
   },
   "jfet-n": {
     "viewBox": "0 0 25 35",
@@ -1072,6 +1275,99 @@ export const CIRCUIT_ART = {
     "viewBox": "0 0 15 15",
     "inner": "<g transform=\"translate(7.5,7.5)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <line x1=\"-5\" y1=\"0\" x2=\"1.5\" y2=\"0\" />\n      <circle cx=\"3.8\" cy=\"0\" r=\"2.3\" />\n    </g>",
     "texts": []
+  },
+  "transformer": {
+    "viewBox": "0 0 30 40",
+    "inner": "<g transform=\"translate(15,20)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <!-- 铁芯 -->\n      <line x1=\"-0.8\" y1=\"-10.5\" x2=\"-0.8\" y2=\"10.5\" />\n      <line x1=\"0.8\" y1=\"-10.5\" x2=\"0.8\" y2=\"10.5\" />\n      <!-- 初级绕组（左，鼓包朝右） -->\n      <path d=\"M -5 -10 C -5 -9.30963 -4.30963 -9.44037 -3.75 -8.75 C -3.75 -8.05963 -5 -8.19037 -5 -7.5 C -5 -6.80963 -4.30963 -6.94037 -3.75 -6.25 C -3.75 -5.55963 -5 -5.69037 -5 -5 C -5 -4.30963 -4.30963 -4.44037 -3.75 -3.75 C -3.75 -3.05963 -5 -3.19037 -5 -2.5 C -5 -1.80963 -4.30963 -1.94037 -3.75 -1.25 C -3.75 -0.559625 -5 -0.690375 -5 0 C -5 0.690375 -4.30963 0.559625 -3.75 1.25 C -3.75 1.94037 -5 1.80963 -5 2.5 C -5 3.19037 -4.30963 3.05963 -3.75 3.75 C -3.75 4.44037 -5 4.30963 -5 5 C -5 5.69037 -4.30963 5.55963 -3.75 6.25 C -3.75 6.94037 -5 6.80963 -5 7.5 C -5 8.19037 -4.30963 8.05963 -3.75 8.75 C -3.75 9.44037 -5 9.30963 -5 10\" />\n      <!-- 次级绕组（右，鼓包朝左） -->\n      <path d=\"M 5 -10 C 5 -9.30963 4.30963 -9.44037 3.75 -8.75 C 3.75 -8.05963 5 -8.19037 5 -7.5 C 5 -6.80963 4.30963 -6.94037 3.75 -6.25 C 3.75 -5.55963 5 -5.69037 5 -5 C 5 -4.30963 4.30963 -4.44037 3.75 -3.75 C 3.75 -3.05963 5 -3.19037 5 -2.5 C 5 -1.80963 4.30963 -1.94037 3.75 -1.25 C 3.75 -0.559625 5 -0.690375 5 0 C 5 0.690375 4.30963 0.559625 3.75 1.25 C 3.75 1.94037 5 1.80963 5 2.5 C 5 3.19037 4.30963 3.05963 3.75 3.75 C 3.75 4.44037 5 4.30963 5 5 C 5 5.69037 4.30963 5.55963 3.75 6.25 C 3.75 6.94037 5 6.80963 5 7.5 C 5 8.19037 4.30963 8.05963 3.75 8.75 C 3.75 9.44037 5 9.30963 5 10\" />\n      <!-- 引线：上端 / 下端 / 中心抽头 -->\n      <line x1=\"-5\" y1=\"-10\" x2=\"-5\" y2=\"-15\" />\n      <line x1=\"-5\" y1=\"10\" x2=\"-5\" y2=\"15\" />\n      <line x1=\"-5\" y1=\"0\" x2=\"-12.5\" y2=\"0\" />\n      <line x1=\"5\" y1=\"-10\" x2=\"5\" y2=\"-15\" />\n      <line x1=\"5\" y1=\"10\" x2=\"5\" y2=\"15\" />\n      <line x1=\"5\" y1=\"0\" x2=\"12.5\" y2=\"0\" />\n      <!-- 同名端（打点端在上） -->\n      <circle cx=\"-5\" cy=\"-12.5\" r=\"0.6\" fill=\"#0f172a\" stroke=\"none\" />\n      <circle cx=\"5\" cy=\"-12.5\" r=\"0.6\" fill=\"#0f172a\" stroke=\"none\" />\n      <g stroke=\"none\" fill=\"#64748b\" font-size=\"2.2\" font-family=\"Consolas, monospace\">\n        \n        \n        \n        \n        \n        \n      </g>\n    </g>",
+    "texts": [
+      {
+        "x": 7.6,
+        "y": 8.6,
+        "size": 2.2,
+        "anchor": "end",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "A1"
+      },
+      {
+        "x": 2.5999999999999996,
+        "y": 18.8,
+        "size": 2.2,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "AT"
+      },
+      {
+        "x": 7.6,
+        "y": 34.2,
+        "size": 2.2,
+        "anchor": "end",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "A2"
+      },
+      {
+        "x": 22.4,
+        "y": 8.6,
+        "size": 2.2,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "B1"
+      },
+      {
+        "x": 27.4,
+        "y": 18.8,
+        "size": 2.2,
+        "anchor": "end",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "BT"
+      },
+      {
+        "x": 22.4,
+        "y": 34.2,
+        "size": 2.2,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "B2"
+      }
+    ]
+  },
+  "triode": {
+    "viewBox": "0 0 35 35",
+    "inner": "<g transform=\"translate(17.5,17.5)\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"0.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n      <circle cx=\"0\" cy=\"0\" r=\"7\" />\n      <!-- 屏极（阳极）：上方横杠 + 引线 -->\n      <line x1=\"-5\" y1=\"-4.2\" x2=\"5\" y2=\"-4.2\" />\n      <line x1=\"0\" y1=\"-15\" x2=\"0\" y2=\"-4.2\" />\n      <!-- 栅极：四段短杠 + 左引线 -->\n      <line x1=\"-5\" y1=\"0\" x2=\"-2.6\" y2=\"0\" />\n      <line x1=\"-1.4\" y1=\"0\" x2=\"1.4\" y2=\"0\" />\n      <line x1=\"2.6\" y1=\"0\" x2=\"5\" y2=\"0\" />\n      <line x1=\"-15\" y1=\"0\" x2=\"-5\" y2=\"0\" />\n      <!-- 阴极：下方横杠 + 引线 -->\n      <line x1=\"-5\" y1=\"4.2\" x2=\"5\" y2=\"4.2\" />\n      <line x1=\"0\" y1=\"4.2\" x2=\"0\" y2=\"15\" />\n      <!-- 灯丝（示意，不引出引脚） -->\n      <path d=\"M -3.2 4.9 L 0 6.4 L 3.2 4.9\" stroke-width=\"0.35\" />\n      <g stroke=\"none\" fill=\"#64748b\" font-size=\"2.4\" font-family=\"Consolas, monospace\">\n        \n        \n        \n      </g>\n    </g>",
+    "texts": [
+      {
+        "x": 19.1,
+        "y": 6.300000000000001,
+        "size": 2.4,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "A"
+      },
+      {
+        "x": 4.9,
+        "y": 16.1,
+        "size": 2.4,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "G"
+      },
+      {
+        "x": 19.1,
+        "y": 30.9,
+        "size": 2.4,
+        "anchor": "start",
+        "fill": "#64748b",
+        "family": "Consolas, monospace",
+        "content": "K"
+      }
+    ]
   },
   "vcc": {
     "viewBox": "0 0 15 22.5",

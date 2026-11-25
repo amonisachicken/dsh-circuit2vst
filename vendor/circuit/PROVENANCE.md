@@ -7,12 +7,12 @@
 | 项 | 值 |
 | --- | --- |
 | 上游仓库 | `https://github.com/amonisachicken/rustomp-circuit-designer` |
-| commit | `f4eaa45062caeed95c51e1aa5eba64b986931deb`（2026-11-15） |
+| commit | `v0.2.1`（`578102d`，2026-11-24）—— 上一版基准 `f4eaa45`（2026-11-15） |
 | 许可 | **GPL-3.0-or-later**（见上游 `LICENSE`） |
-| 拷贝的文件 | `symbols/symbols.json`、`assets/gb4728-symbols-kit/symbols/*.svg`（16 个）、`assets/gb4728-ext/symbols/*.svg`（2 个：test-point / nc）、`frontend/public/examples/*.design.json`（4 个示例） |
+| 拷贝的文件 | `symbols/symbols.json`（21 个符号）、`assets/gb4728-symbols-kit/symbols/*.svg`（16 个）、`assets/gb4728-ext/symbols/*.svg`（5 个：test-point / nc / **inductor / transformer / triode**）、`frontend/public/examples/*.design.json`（4 个示例） |
 | 不改的部分 | 上述文件一行未改；上游升级时整目录替换 |
 | 未拷贝 | `assets/gb4728-symbols-kit.7z`（原稿压缩包，运行时不需要） |
-| 另含 | `models.lib`（13 个器件模型 + OP07A 宏模型，**只用于仿真**，不进交付网表） |
+| 另含 | `models.lib`（器件模型 + OP07A 宏模型 + **电子三极管 TRIODE 本体与 4 个型号子电路**，**只用于仿真**，不进交付网表） |
 
 ## 为什么 vendor
 
